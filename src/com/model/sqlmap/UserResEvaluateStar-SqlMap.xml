@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+
+    <resultMap id="RM.UserResEvaluateStar" class="com.model.UserResEvaluateStar">
+        <result property="id" column="id"/>
+        <result property="uid" column="uid"/>
+        <result property="resId" column="res_id"/>
+        <result property="starScore" column="star_score"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="UserResEvaluateStar.columns">
+	    <![CDATA[
+        id, uid, res_id, star_score, create_time
+	    ]]>
+	</sql>
+	
+    <insert id="UserResEvaluateStar.insert" >
+    <![CDATA[
+        INSERT INTO plt_user_res_evaluate_star (
+        	id,
+        	uid,
+        	res_id,
+        	star_score,
+        	create_time
+        ) VALUES (
+        	#id#,
+        	#uid#,
+        	#resId#,
+        	#starScore#,
+        	#createTime#
+        )
+    ]]>
+    <!--
+    mysql:		type="post" SELECT  select last_insert_id()
+    sqlserver:	type="post" SELECT  @@identity  AS  ID
+    oracle:		type="pre" 	SELECT  sequenceName.nextval AS ID FROM DUAL
+    DB2:		type="pre"	values nextval for sequenceName
+    -->
+        <selectKey resultClass="java.lang.Integer" type="post" keyProperty="id" >
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="UserResEvaluateStar.update" >
+    <![CDATA[
+        UPDATE plt_user_res_evaluate_star SET
+	        uid = #uid#,
+	        res_id = #resId#,
+	        star_score = #starScore#,
+	        create_time = #createTime#
+        WHERE
+	        id = #id# 
+    ]]>
+    </update>
+
+    <delete id="UserResEvaluateStar.delete">
+    <![CDATA[
+        DELETE FROM plt_user_res_evaluate_star WHERE id = #id#
+    ]]>
+    </delete>
+    
+    <select id="UserResEvaluateStar.getById" resultMap="RM.UserResEvaluateStar">
+	    SELECT <include refid="UserResEvaluateStar.columns"/>
+	    <![CDATA[
+	        FROM plt_user_res_evaluate_star 
+	        WHERE 
+		        id = #id# 
+	    ]]>
+    </select>
+
+    <select id="UserResEvaluateStar.getByUidResId" resultMap="RM.UserResEvaluateStar">
+	    SELECT <include refid="UserResEvaluateStar.columns"/>
+	    <![CDATA[
+	        FROM plt_user_res_evaluate_star
+	        WHERE uid = #uid#
+		      AND res_id = #resId#
+	    ]]>
+    </select>
+
+</sqlMap>
+

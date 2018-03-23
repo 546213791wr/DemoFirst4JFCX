@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+
+    <resultMap id="RM.JiFenStarRecord" class="com.model.JiFenStarRecord">
+        <result property="id" column="id"/>
+        <result property="uid" column="uid"/>
+        <result property="originType" column="origin_type"/>
+        <result property="coinType" column="coin_type"/>
+        <result property="score" column="score"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="JiFenStarRecord.columns">
+	    <![CDATA[
+        id, uid, origin_type, coin_type, score, create_time
+	    ]]>
+	</sql>
+	
+    <insert id="JiFenStarRecord.insert" >
+    <![CDATA[
+        INSERT INTO plt_user_jifen_star_records (
+        	id,
+        	uid,
+        	origin_type,
+        	coin_type,
+        	score,
+        	create_time
+        ) VALUES (
+        	#id#,
+        	#uid#,
+        	#originType#,
+        	#coinType#,
+        	#score#,
+        	#createTime#
+        )
+    ]]>
+    <!--
+    mysql:		type="post" SELECT  select last_insert_id()
+    sqlserver:	type="post" SELECT  @@identity  AS  ID
+    oracle:		type="pre" 	SELECT  sequenceName.nextval AS ID FROM DUAL
+    DB2:		type="pre"	values nextval for sequenceName
+    -->
+        <selectKey resultClass="java.lang.Integer" type="post" keyProperty="id" >
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="JiFenStarRecord.update" >
+    <![CDATA[
+        UPDATE plt_user_jifen_star_records SET
+	        uid = #uid#,
+	        origin_type = #originType#,
+	        coin_type = #coinType#,
+	        score = #score#,
+	        create_time = #createTime#
+        WHERE
+	        id = #id# 
+    ]]>
+    </update>
+
+    <delete id="JiFenStarRecord.delete">
+    <![CDATA[
+        DELETE FROM plt_user_jifen_star_records WHERE id = #id#
+    ]]>
+    </delete>
+    
+    <select id="JiFenStarRecord.getById" resultMap="RM.JiFenStarRecord">
+	    SELECT <include refid="JiFenStarRecord.columns"/>
+	    <![CDATA[
+	        FROM plt_user_jifen_star_records 
+	        WHERE 
+		        id = #id# 
+	    ]]>
+    </select>
+
+</sqlMap>
+

@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+
+    <resultMap id="RM.FanyaUserDetail" class="com.model.FanyaUserDetail">
+        <result property="id" column="id"/>
+        <result property="uid" column="uid"/>
+        <result property="fid" column="fid"/>
+        <result property="code" column="code"/>
+        <result property="userTypeId" column="user_type_id"/>
+        <result property="loginName" column="login_name"/>
+        <result property="realName" column="real_name"/>
+        <result property="email" column="email"/>
+        <result property="gender" column="gender"/>
+        <result property="gradeId" column="grade_id"/>
+        <result property="classId" column="class_id"/>
+        <result property="ageGroupId" column="age_group_id"/>
+        <result property="level" column="level"/>
+        <result property="readingFaceLevel" column="reading_face_level"/>
+        <result property="star" column="star"/>
+        <result property="integral" column="integral"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createUserId" column="create_user_id"/>
+        <result property="modifyTime" column="modify_time"/>
+        <result property="modifyUserId" column="modify_user_id"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="FanyaUserDetail.columns">
+	    <![CDATA[
+        id, uid, login_name, real_name, email, gender, grade_id, class_id, age_group_id, level, reading_face_level, star, integral, create_time, create_user_id, modify_time, modify_user_id,
+        fid,code,user_type_id
+	    ]]>
+	</sql>
+	
+    <insert id="FanyaUserDetail.insert" >
+    <![CDATA[
+        INSERT INTO xy_fanya_user_detail (
+        	id, 
+        	uid, 
+        	fid,
+        	code,
+        	user_type_id,
+        	login_name,
+        	real_name, 
+        	email, 
+        	gender, 
+        	grade_id, 
+        	class_id, 
+        	age_group_id, 
+        	level, 
+        	reading_face_level, 
+        	star, 
+        	integral,
+        	create_time,
+        	create_user_id, 
+        	modify_time, 
+        	modify_user_id 
+        ) VALUES (
+        	#id#, 
+        	#uid#, 
+        	#fid#,
+        	#code#,
+        	#userTypeId#,
+        	#loginName#,
+        	#realName#, 
+        	#email#, 
+        	#gender#, 
+        	#gradeId#, 
+        	#classId#, 
+        	#ageGroupId#, 
+        	#level#, 
+        	#readingFaceLevel#, 
+        	#star#, 
+        	#integral#, 
+        	#createTime#,
+        	#createUserId#, 
+        	#modifyTime#, 
+        	#modifyUserId# 
+        )
+    ]]>
+    <!--
+    mysql:		type="post" SELECT  select last_insert_id()
+    sqlserver:	type="post" SELECT  @@identity  AS  ID
+    oracle:		type="pre" 	SELECT  sequenceName.nextval AS ID FROM DUAL
+    DB2:		type="pre"	values nextval for sequenceName
+    -->
+        <selectKey resultClass="java.lang.Integer" type="post" keyProperty="id" >
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="FanyaUserDetail.update" >
+    <![CDATA[
+        UPDATE xy_fanya_user_detail SET
+	        uid = #uid#,
+	        fid = #fid#,
+	        code = #code#,
+	        user_type_id = #userTypeId#,
+	        login_name = #loginName#,
+	        real_name = #realName#,
+	        email = #email#,
+	        gender = #gender#,
+	        grade_id = #gradeId#,
+	        class_id = #classId#,
+	        age_group_id = #ageGroupId#,
+	        level = #level#,
+	        reading_face_level = #readingFaceLevel#,
+	        star = #star#,
+	        integral = #integral#,
+	        create_time = #createTime#,
+	        create_user_id = #createUserId#,
+	        modify_time = #modifyTime#,
+	        modify_user_id = #modifyUserId#
+        WHERE 
+	        id = #id# 
+    ]]>
+    </update>
+
+    <delete id="FanyaUserDetail.delete">
+    <![CDATA[
+        DELETE FROM xy_fanya_user_detail WHERE
+        id = #id# 
+    ]]>
+    </delete>
+    
+    <select id="FanyaUserDetail.getById" resultMap="RM.FanyaUserDetail">
+	    SELECT <include refid="FanyaUserDetail.columns"/>
+	    <![CDATA[
+	        FROM xy_fanya_user_detail 
+	        WHERE 
+		        id = #id# 
+	    ]]>
+    </select>
+
+    <select id="FanyaUserDetail.getByUserList" resultMap="RM.FanyaUserDetail">
+	    SELECT  t.*
+	        FROM xy_fanya_user_detail t join xy_fanya_user t1 on t.uid = t1.uid
+	        WHERE
+		        t1.fid = '31529' order by t.id desc
+    </select>
+
+
+	<select id="FanyaUserDetail.getByUid" resultMap="RM.FanyaUserDetail">
+	    SELECT <include refid="FanyaUserDetail.columns"/>
+	    <![CDATA[
+	        FROM xy_fanya_user_detail
+	        WHERE
+		        uid = #uid# limit 1
+	    ]]>
+    </select>
+
+
+	<!-- 通过fanyaUserId找到fanyaUser对象 -->
+	<select id="FanyaUserDetail.getUserByName" resultMap="RM.FanyaUserDetail">
+		SELECT <include refid="FanyaUserDetail.columns"/>
+		<![CDATA[
+	        FROM xy_fanya_user_detail u
+	        WHERE
+		        login_name = #username# limit 1
+	    ]]>
+	</select>
+
+	<sql id="FanyaUserDetail.findPage.where">
+	    <dynamic prepend="WHERE">
+		       <isNotEmpty prepend="AND" property="query.id">
+		             id = #query.id#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="query.uid">
+		             uid = #query.uid#
+		       </isNotEmpty>
+			<isNotEmpty prepend="AND" property="query.fid">
+		             fid = #query.fid#
+		       </isNotEmpty>
+			<isNotEmpty prepend="AND" property="query.code">
+		             code = #query.code#
+		       </isNotEmpty>
+			<isNotEmpty prepend="AND" property="query.userTypeId">
+		             user_type_id = #query.userTypeId#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="query.loginName">
+		             login_name like concat('%',#query.loginName#,'%')
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="query.realName">
+		             real_name = #query.realName#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="query.email">
+		             email = #query.email#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="query.gender">
+		             gender = #query.gender#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="query.gradeId">
+		             grade_id = #query.gradeId#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="query.classId">
+		             class_id = #query.classId#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="query.ageGroupId">
+		             age_group_id = #query.ageGroupId#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="query.level">
+		             level = #query.level#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="query.readingFaceLevel">
+		             reading_face_level = #query.readingFaceLevel#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="query.star">
+		             star = #query.star#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="query.integral">
+		             integral = #query.integral#
+		       </isNotEmpty>
+
+		       <isNotEmpty prepend="AND" property="query.createTime">
+		             create_time = #query.createTime#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="query.createUserId">
+		             create_user_id = #query.createUserId#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="query.modifyTime">
+		             modify_time = #query.modifyTime#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="query.modifyUserId">
+		             modify_user_id = #query.modifyUserId#
+		       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	
+	<select id="FanyaUserDetail.list" resultMap="RM.FanyaUserDetail">
+	    SELECT <include refid="FanyaUserDetail.columns"/> FROM xy_fanya_user_detail
+	    <include refid="FanyaUserDetail.findPage.where"/>
+		limit #startNumber#, #pageSize#
+    </select>
+	 
+    <select id="FanyaUserDetail.findPage.count" resultClass="java.lang.Integer">
+        SELECT count(*) FROM xy_fanya_user_detail <include refid="FanyaUserDetail.findPage.where"/>
+    </select>
+    
+    <select id="FanyaUserDetail.findPage" resultMap="RM.FanyaUserDetail">
+    	SELECT <include refid="FanyaUserDetail.columns"/> FROM xy_fanya_user_detail 
+		<include refid="FanyaUserDetail.findPage.where"/>
+		<isNotEmpty property="sortString">
+			$sortString$
+		</isNotEmpty>
+		limit #startNumber#, #pageSize#
+    </select>
+    
+    <!-- 获取班级下学生集合 -->
+	<select id="FanyaUserDetail.getStudentListByClassId" resultMap="RM.FanyaUserDetail">
+	SELECT
+	x1.*
+	FROM
+	xy_fanya_user_detail x1
+	where x1.user_type_id = 1
+	AND x1.class_id =#classId#
+	</select>
+	<!-- 获取班级下学生uid集合 -->
+	<select id="FanyaUserDetail.getStudentUidListByClassId" resultClass="java.lang.Integer">
+	SELECT
+	x1.uid
+	FROM
+	xy_fanya_user_detail x1
+	where
+	x1.user_type_id = 1
+	AND x1.class_id =#classId#
+	</select>
+
+	
+	<!-- 班级报告阅读等级分布区间图 -->
+	<select id="FanyaUserDetail.getClassAbilityAnalysis"
+	resultClass="java.util.HashMap">
+	SELECT
+	COUNT(`level`)as num,level
+	FROM
+	xy_fanya_user_detail
+	where class_id=#classId# and level is not null
+	GROUP BY `level`
+	</select>
+	
+	<!-- 班级报告统计班级阅读排行榜 -->
+	<select id="FanyaUserDetail.getClassRanking" resultClass="java.util.HashMap">
+	SELECT
+	r2.`level`,
+	r2.real_name as name,
+	r2.uid,
+	TRUNCATE (
+	IFNULL(SUM(r1.word_num), 0) / 10,
+	1
+	) AS wordCount,
+	COUNT(r3.res_id) AS bookCount
+	FROM
+	xy_fanya_user_detail r2
+	LEFT JOIN re_user_evaluate r3 ON r2.uid = r3.uid
+	LEFT JOIN re_res r1 ON r1.id = r3.res_id
+	
+	WHERE
+	r2.class_id =#classId#
+	and r2.user_type_id=1
+	GROUP BY
+	uid
+	ORDER BY
+	`level` DESC,bookCount desc ,wordCount desc
+	</select>
+
+	<update id="FanyaUserDetail.updateIntegral" >
+          update xy_fanya_user_detail set
+        		<isEqual property="type" compareValue="0">
+					integral = integral - #integral#
+ 				</isEqual>
+				<isEqual property="type" compareValue="1">
+					integral = integral + #integral#
+ 				</isEqual>
+          where uid = #uid#
+	</update>
+
+	<select id="FanyaUserDetail.getByLoginName" resultMap="RM.FanyaUserDetail">
+		SELECT <include refid="FanyaUserDetail.columns"/>
+		<![CDATA[
+	        FROM xy_fanya_user_detail
+	        WHERE
+		        login_name = #userName# limit 1
+	    ]]>
+	</select>
+
+	<!-- 根据username + fid 查找用户 -->
+	<select id="FanyaUserDetail.getUserByNameAndFid" resultMap="RM.FanyaUserDetail">
+		SELECT <include refid="FanyaUserDetail.columns"/>
+		<![CDATA[
+	        FROM xy_fanya_user_detail
+	        WHERE
+		        login_name = #username# and fid = #fid# limit 1
+	    ]]>
+	</select>
+
+	<!-- 统计机构阅读前10名 -->
+	<select id="FanyaUserDetail.getOrgRanking" resultClass="java.util.HashMap">
+		SELECT
+		*
+		FROM
+		(
+		SELECT
+		t.uid,
+		t.real_name,
+		o.fid,
+		o.org_name,
+		count(1) count
+		FROM
+		xy_fanya_user_detail t
+		LEFT JOIN re_user_evaluate r ON t.uid = r.uid
+		LEFT JOIN plt_open_org o ON t.fid = o.fid
+		WHERE
+		t.fid = #fid#
+		AND r. STATUS = 3
+		GROUP BY
+		t.uid
+		) a
+		ORDER BY
+		count DESC
+		LIMIT 0,6;
+	</select>
+
+	<resultMap id="RM.API.UserList" class="java.util.HashMap">
+		<result property="fid" column="fid"/>
+		<result property="uid" column="uid"/>
+		<result property="userName" column="real_name"/>
+		<result property="roleType" column="user_type_id"/>
+		<result property="ageGroup" column="age_group_id"/>
+		<result property="className" column="class_name"/>
+		<result property="classId" column="class_id"/>
+		<result property="gradeName" column="grade_name"/>
+		<result property="gradeId" column="grade_id"/>
+		<result property="loginName" column="login_name"/>
+	</resultMap>
+
+	<select id="FanyaUserDetail.getUserByFid" resultMap="RM.API.UserList">
+		SELECT
+		a.fid,
+		c.uid,
+		c.real_name,
+		c.user_type_id,
+		c.age_group_id,
+		b.id class_id,
+		b. NAME class_name,
+		a.id grade_id,
+		a. NAME grade_name,
+		c.login_name
+		FROM
+		xy_grade a
+		JOIN xy_class b ON b.grade_id = a.id AND b.STATUS = '1' AND a.STATUS ='1' AND a.fid = #query.fid#
+		JOIN xy_fanya_user_detail c ON c.class_id = b.id
+		<isNotEmpty prepend="AND" property="query.userTypeId">
+			c.user_type_id = #query.userTypeId#
+		</isNotEmpty>
+		limit #startNumber#, #pageSize#
+	</select>
+
+	<select id="FanyaUserDetail.getUserByFid.Count" resultClass="java.lang.Integer">
+		SELECT
+		count(*)
+		FROM
+		xy_grade a
+		JOIN xy_class b ON b.grade_id = a.id AND b.STATUS = '1' AND a.STATUS ='1' AND a.fid = #query.fid#
+		JOIN xy_fanya_user_detail c ON c.class_id = b.id
+		<isNotEmpty prepend="AND" property="query.userTypeId">
+			c.user_type_id = #query.userTypeId#
+		</isNotEmpty>
+	</select>
+
+	<select id="FanyaUserDetail.getByFidAndUid" resultMap="RM.FanyaUserDetail">
+		SELECT  t.*
+		  FROM xy_fanya_user_detail t
+		 WHERE t.fid = #query.fid#
+		 <isNotEmpty prepend="AND" property="query.uid">
+			   t.uid = #query.uid#
+		 </isNotEmpty>
+		 ORDER BY t.id
+		limit #startNumber#, #pageSize#
+	</select>
+
+	<select id="FanyaUserDetail.getCountByFidAndUid" resultClass="java.lang.Integer">
+		SELECT  count(*)
+		  FROM xy_fanya_user_detail t
+		 WHERE t.fid = #fid#
+		<isNotEmpty prepend="AND" property="uid">
+			   t.uid = #uid#
+		 </isNotEmpty>
+	</select>
+
+    <!-- 根据FID统计 -->
+    <select id="FanyaUserDetail.getCountByFid" resultClass="java.lang.Integer">
+        SELECT  count(*)
+        FROM xy_fanya_user_detail t
+        WHERE t.fid = #fid#
+    </select>
+
+	<select id="FanyaUserDetail.getByFidAndLoginName" resultMap="RM.FanyaUserDetail">
+		SELECT <include refid="FanyaUserDetail.columns"/>
+		<![CDATA[
+	        FROM xy_fanya_user_detail
+	        WHERE
+		        login_name = #loginName#
+		        and fid = #fid# limit 1
+	    ]]>
+	</select>
+
+	<select id="FanyaUserDetail.getByEmail" resultMap="RM.FanyaUserDetail">
+		SELECT <include refid="FanyaUserDetail.columns"/>
+		<![CDATA[
+	        FROM xy_fanya_user_detail
+	        WHERE    email = #email#
+		    limit 1
+	    ]]>
+	</select>
+
+
+
+</sqlMap>
+

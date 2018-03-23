@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+    <resultMap id="RM.ReadReport" class="com.model.ReadReport">
+        <result property="id" column="id"/>
+        <result property="resId" column="res_id"/>
+        <result property="resPic" column="res_pic"/>
+        <result property="uid" column="uid"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="createTime" column="create_time"/>
+        <result property="agreeCount" column="agree_count"/>
+        <result property="isPerfect" column="is_perfect"/>
+		<result property="opTeaUid" column="op_tea_uid"/>
+		<result property="opTime" column="op_time"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="ReadReport.columns">
+	    <![CDATA[
+        id, res_id, res_pic, uid, title, content, create_time, agree_count, is_perfect,op_tea_uid,op_time
+	    ]]>
+	</sql>
+
+    <insert id="ReadReport.insert" >
+    <![CDATA[
+        INSERT INTO re_read_report (
+        	id, 
+        	res_id, 
+        	res_pic, 
+        	uid, 
+        	title, 
+        	content, 
+        	create_time, 
+        	agree_count, 
+        	is_perfect,
+        	op_tea_uid,
+        	op_time
+        ) VALUES (
+        	#id#, 
+        	#resId#, 
+        	#resPic#, 
+        	#uid#, 
+        	#title#, 
+        	#content#, 
+        	#createTime#, 
+        	#agreeCount#, 
+        	#isPerfect#,
+        	#opTeaUid#,
+        	#opTime#
+        )
+    ]]>
+    <!--
+    mysql:		type="post" SELECT  select last_insert_id()
+    sqlserver:	type="post" SELECT  @@identity  AS  ID
+    oracle:		type="pre" 	SELECT  sequenceName.nextval AS ID FROM DUAL
+    DB2:		type="pre"	values nextval for sequenceName
+    -->
+        <selectKey resultClass="java.lang.Integer" type="post" keyProperty="id" >
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="ReadReport.update" >
+    <![CDATA[
+        UPDATE re_read_report SET
+	        res_id = #resId#,
+	        res_pic = #resPic#,
+	        uid = #uid#,
+	        title = #title#,
+	        content = #content#,
+	        create_time = #createTime#,
+	        agree_count = #agreeCount#,
+	        is_perfect = #isPerfect#,
+	        op_time=#opTime#,
+	        op_tea_uid=#opTeaUid#
+	     WHERE
+	        id = #id# 
+    ]]>
+    </update>
+
+    <delete id="ReadReport.delete">
+    <![CDATA[
+        DELETE FROM re_read_report WHERE
+        id = #reportId# 
+    ]]>
+    </delete>
+
+    <select id="ReadReport.getById" resultMap="RM.ReadReport">
+	    SELECT <include refid="ReadReport.columns"/>
+	    <![CDATA[
+	        FROM re_read_report 
+	        WHERE 
+		        id = #id# 
+	    ]]>
+    </select>
+
+</sqlMap>
+

@@ -1,0 +1,1 @@
+ALTER TABLE `xy_magezine` ADD INDEX index_EXTERNAL_ID (`EXTERNAL_ID`)  -- 添加索引用于 Magezine.getMagazineForShow.count 查询数据

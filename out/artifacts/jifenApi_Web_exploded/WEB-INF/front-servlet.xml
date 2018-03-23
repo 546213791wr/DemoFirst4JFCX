@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tool="http://www.springframework.org/schema/tool"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation=
+		   "http://www.springframework.org/schema/aop       http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+			http://www.springframework.org/schema/beans     http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+			http://www.springframework.org/schema/context   http://www.springframework.org/schema/context/spring-context-4.2.xsd
+			http://www.springframework.org/schema/jee       http://www.springframework.org/schema/jee/spring-jee-4.2.xsd
+			http://www.springframework.org/schema/tx        http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+			http://www.springframework.org/schema/util      http://www.springframework.org/schema/util/spring-util-4.2.xsd
+			http://www.springframework.org/schema/mvc       http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+			http://www.springframework.org/schema/tool      http://www.springframework.org/schema/tool/spring-tool-4.2.xsd
+			http://www.springframework.org/schema/cache     http://www.springframework.org/schema/cache/spring-cache-4.2.xsd">
+
+	<!-- Spring MVC 注解 -->
+    <mvc:annotation-driven>
+        <mvc:path-matching suffix-pattern="false"/>
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <constructor-arg value="UTF-8"/>
+                <property name="writeAcceptCharset" value="false"/>
+            </bean>
+            <ref bean="fastJsonHttpMessageConverter"/>
+        </mvc:message-converters>
+
+    </mvc:annotation-driven>
+
+    <!-- 将事务定义在Spring MVC的应用上下文 也是可以生效的，即@Transactional 直接写在controller的方法上 ；txManager 在spring-common中有定义-->
+    <tx:annotation-driven transaction-manager="txManager" />
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/pt-index"/>
+			<mvc:mapping path="/index"/>
+			<mvc:mapping path="/index"/>
+			<mvc:mapping path="/debug"/>
+			<mvc:mapping path="/verify"/>
+			<bean class="com.interceptor.MyInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+    <tx:annotation-driven transaction-manager="txManager" />
+	
+	<!-- 指定Sping组件扫描的基本包路径 -->
+    <context:component-scan base-package="com.**.controller.front" >
+    	<!-- 只扫描Controller, 不可重复加载Service -->
+    	<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+    
+  	<!-- JSP视图解析器 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">  
+        <property name="prefix" value="/WEB-INF/front/" />
+        <property name="suffix" value=".jsp" />
+        <property name="order" value="1" />
+    </bean>
+	
+</beans>
+
+

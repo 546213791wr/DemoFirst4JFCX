@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+
+    <resultMap id="RM.Product" class="com.model.Product">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="price" column="price"/>
+        <result property="exchangePrice" column="exchange_price"/>
+        <result property="pictureUrl" column="picture_url"/>
+        <result property="unit" column="unit"/>
+        <result property="artNo" column="art_no"/>
+        <result property="store" column="store"/>
+        <result property="saled" column="saled"/>
+        <result property="description" column="description"/>
+        <result property="status" column="status"/>
+        <result property="orders" column="orders"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="Product.columns">
+	    <![CDATA[
+        id, name, price, exchange_price, picture_url, unit, art_no, store, saled, description, status, orders
+	    ]]>
+	</sql>
+	
+    <insert id="Product.insert" >
+    <![CDATA[
+        INSERT INTO plt_product (
+        	id,
+        	name,
+        	price,
+        	exchange_price,
+        	picture_url,
+        	unit,
+        	art_no,
+        	store,
+        	saled,
+        	description,
+        	status,
+        	orders
+        ) VALUES (
+        	#id#,
+        	#name#,
+        	#price#,
+        	#exchangePrice#,
+        	#pictureUrl#,
+        	#unit#,
+        	#artNo#,
+        	#store#,
+        	#saled#,
+        	#description#,
+        	#status#,
+        	#orders#
+        )
+    ]]>
+    <!--
+    mysql:		type="post" SELECT  select last_insert_id()
+    sqlserver:	type="post" SELECT  @@identity  AS  ID
+    oracle:		type="pre" 	SELECT  sequenceName.nextval AS ID FROM DUAL
+    DB2:		type="pre"	values nextval for sequenceName
+    -->
+        <selectKey resultClass="java.lang.Integer" type="post" keyProperty="id" >
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="Product.update" >
+    <![CDATA[
+        UPDATE plt_product SET
+	        name = #name#,
+	        price = #price#,
+	        exchange_price = #exchangePrice#,
+	        picture_url = #pictureUrl#,
+	        unit = #unit#,
+	        art_no = #artNo#,
+	        store = #store#,
+	        saled = #saled#,
+	        description = #description#,
+	        status = #status#,
+	        orders = #orders#
+        WHERE
+	        id = #id# 
+    ]]>
+    </update>
+
+    <delete id="Product.delete">
+    <![CDATA[
+        DELETE FROM plt_product WHERE id = #id#
+    ]]>
+    </delete>
+    
+    <select id="Product.getById" resultMap="RM.Product">
+	    SELECT <include refid="Product.columns"/>
+	    <![CDATA[
+	        FROM plt_product 
+	        WHERE 
+		        id = #id# 
+	    ]]>
+    </select>
+
+</sqlMap>
+

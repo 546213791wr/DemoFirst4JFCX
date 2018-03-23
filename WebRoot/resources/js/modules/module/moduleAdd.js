@@ -1,0 +1,51 @@
+/**
+ * 
+ */
+$(document).ready(function(){
+	var validator = $("#module_form").validate({
+		rules:{
+			name:{
+				required:true
+			},
+			/*fid:{
+				required:true
+			},*/
+			ageGroupId:{
+				required:true
+			},
+			userTypeId:{
+				required:true
+			}
+		},
+		errorClass: "help-inline",
+		errorElement: "span",
+		highlight:function(element, errorClass, validClass) {
+			$(element).parents('.control-group').removeClass('success');
+			$(element).parents('.control-group').addClass('error');
+		},
+		unhighlight: function(element, errorClass, validClass) {
+			$(element).parents('.control-group').removeClass('error');
+			$(element).parents('.control-group').addClass('success');
+		}
+	});
+	$("#module_form").on("submit", function() {
+		ajaxForm(this, function(data) {
+            if(data.code == 1){
+            	showSuccess("新增模块成功", function(){
+            		closeAllLayer();
+            		loadPage(ctxPath + "/modules/module/list");
+            	});
+            }else{
+            	showError(data.msg);
+            }
+        }, function(){
+        	showError("新增模块出错.");
+        });
+        return false; // 阻止表单自动提交事件
+    });
+	$("#save").click(function(){
+		if(validator.form()){
+			$("#module_form").submit();
+		}
+	});
+});

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+
+    <resultMap id="RM.UserSignDetail" class="com.model.UserSignDetail">
+        <result property="id" column="id"/>
+        <result property="uid" column="uid"/>
+        <result property="integral" column="integral"/>
+        <result property="extendScore" column="extend_score"/>
+        <result property="continuumDays" column="continuum_days"/>
+        <result property="signTime" column="sign_time"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="UserSignDetail.columns">
+	    <![CDATA[
+        id, uid, integral, extend_score, continuum_days, sign_time 
+	    ]]>
+	</sql>
+	
+    <insert id="UserSignDetail.insert" >
+    <![CDATA[
+        INSERT INTO re_user_sign_detail (
+        	uid, 
+        	integral, 
+        	extend_score, 
+        	continuum_days, 
+        	sign_time 
+        ) VALUES (
+        	#uid#, 
+        	#integral#, 
+        	#extendScore#, 
+        	#continuumDays#, 
+        	#signTime# 
+        )
+    ]]>
+    <!--
+    mysql:		type="post" SELECT  select last_insert_id()
+    sqlserver:	type="post" SELECT  @@identity  AS  ID
+    oracle:		type="pre" 	SELECT  sequenceName.nextval AS ID FROM DUAL
+    DB2:		type="pre"	values nextval for sequenceName
+    -->
+        <selectKey resultClass="java.lang.Integer" type="post" keyProperty="id" >
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="UserSignDetail.update" >
+    <![CDATA[
+        UPDATE re_user_sign_detail SET
+	        uid = #uid#,
+	        integral = #integral#,
+	        extend_score = #extendScore#,
+	        continuum_days = #continuumDays#,
+	        sign_time = #signTime#
+        WHERE 
+	        id = #id# 
+    ]]>
+    </update>
+
+    <delete id="UserSignDetail.delete">
+    <![CDATA[
+        DELETE FROM re_user_sign_detail WHERE
+        id = #id# 
+    ]]>
+    </delete>
+    
+    <select id="UserSignDetail.getById" resultMap="RM.UserSignDetail">
+	    SELECT <include refid="UserSignDetail.columns"/>
+	    <![CDATA[
+	        FROM re_user_sign_detail 
+	        WHERE 
+		        id = #id# 
+	    ]]>
+    </select>
+    
+	<sql id="UserSignDetail.findPage.where">
+	    <dynamic prepend="WHERE">
+		       <isNotEmpty prepend="AND" property="query.id">
+		             id = #query.id#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="query.uid">
+		             uid = #query.uid#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="query.integral">
+		             integral = #query.integral#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="query.extendScore">
+		             extend_score = #query.extendScore#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="query.continuumDays">
+		             continuum_days = #query.continuumDays#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="query.signTime">
+		             sign_time = #query.signTime#
+		       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	
+	<select id="UserSignDetail.list" resultMap="RM.UserSignDetail">
+	    SELECT <include refid="UserSignDetail.columns"/> FROM re_user_sign_detail
+	    <include refid="UserSignDetail.findPage.where"/>
+	    order by sign_time desc 
+    </select>
+	
+	<select id="UserSignDetail.findLastSign" resultMap="RM.UserSignDetail">
+	    SELECT <include refid="UserSignDetail.columns"/> FROM re_user_sign_detail
+		where uid = #uid#
+	    order by sign_time desc 
+	    limit 0,1
+    </select>
+	 
+    <select id="UserSignDetail.findPage.count" resultClass="java.lang.Integer">
+        SELECT count(*) FROM re_user_sign_detail <include refid="UserSignDetail.findPage.where"/>
+    </select>
+    
+    <select id="UserSignDetail.findPage" resultMap="RM.UserSignDetail">
+    	SELECT <include refid="UserSignDetail.columns"/> FROM re_user_sign_detail 
+		<include refid="UserSignDetail.findPage.where"/>
+		<isNotEmpty property="sortString">
+			$sortString$
+		</isNotEmpty>
+		limit #startNumber#, #pageSize#
+    </select>
+
+	<select id="UserSignDetail.getCurrentWeekSignDetail" resultMap="RM.UserSignDetail">
+		SELECT <include refid="UserSignDetail.columns"/> FROM re_user_sign_detail
+		WHERE YEARWEEK(date_format(sign_time,'%Y-%m-%d')) = YEARWEEK(now()) and  uid = #uid#;
+	</select>
+
+</sqlMap>
+

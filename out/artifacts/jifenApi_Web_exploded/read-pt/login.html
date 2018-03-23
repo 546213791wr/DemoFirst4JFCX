@@ -1,0 +1,127 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>学雅阅读系统</title>
+  <link rel="stylesheet" href="css/style-pt.css">
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="css/swiper.css">
+</head>
+
+<body style="overflow-y:hidden;" id="login-body">
+<section id="login">
+  <div class="qrcode-wrap">
+    <div class="qrcode">
+      <a href="javascript:;">
+        <span>扫码下载app</span>
+      </a>
+      <img src="img/qrcode_login.png" alt="qrcode">
+    </div>
+    <div class="qrcode">
+      <a href="javascript:;">
+        <span>扫码下载公众号</span>
+      </a>
+      <img src="img/qrcode_login.png" alt="qrcode">
+    </div>
+  </div>
+  <div class="default_nav">
+    <div class="device">
+      <div class="swiper-container">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide">
+            <img src="img/login-banner.png">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="login_nav">
+      <h1>
+        <img src="img/logo-pt.png">
+        <span>莆田市书香校园智慧阅读平台</span>
+      </h1>
+      <ul id="inpGroup">
+        <li>
+          <i class="icon-organization"></i>
+          <input type="text" name="searchKey" placeholder="选择机构" onblur="if(this.value==''){this.placeholder='选择机构'}" onfocus="this.placeholder=''" />
+          <input class="institution_option" type="button" value=" " />
+          <input class="institution_option" type="button" value="" onclick="query()">
+          <i class="icon-search"></i>
+          <dl id="query-list">
+            <dd><a href="javascript:;">成都市草堂中学</a></dd>
+            <dd><a href="javascript:;">成都市第七中学</a></dd>
+            <dd><a href="javascript:;">绵阳中学</a></dd>
+          </dl>
+        </li>
+        <li>
+          <i class="icon-user"></i>
+          <input type="text" name="searchKey" placeholder="用户名/手机号/邮箱" onblur="if(this.value==''){this.placeholder='用户名/手机号/邮箱'}" onfocus="this.placeholder=''" />
+        </li>
+        <li>
+          <i class="icon-password"></i>
+          <input type="password" name="pwd" placeholder="密码" onblur="if(this.value==''){this.placeholder='密码'}" onfocus="this.placeholder=''" />
+        </li>
+      </ul>
+      <a href="#" class="submit">登录</a>
+      <a href="#" class="forget">忘记密码？</a>
+    </div>
+  </div>
+</section>
+<script src="js/jquery.min.js"></script>
+<!-- Swiper JS -->
+<script src="js/swiper-3.4.2.min.js"></script>
+<!-- Initialize Swiper -->
+<script>
+  $(function() {
+    selfAdaption();
+    qrcode();
+    focus();
+  });
+  // 二维码显示隐藏
+  function qrcode() {
+    $('.qrcode a').hover(function() {
+      $(this).parents(".qrcode").find("img").show(0);
+    }, function() {
+      $(this).parents(".qrcode").find("img").hide(0);
+    })
+  }
+  // 登录窗口
+  function selfAdaption() {
+    var bodyHeight = document.body.offsetHeight;
+    document.getElementById("login").style.height = bodyHeight - 222 + "px";
+  }
+  // 输入框获取焦点 图标显示颜色
+  function focus() {
+    $("#inpGroup input[type=text],#inpGroup input[type=password]").on("focus",function () {
+      $(this).siblings('i').addClass("focus");
+    }).on("blur",function () {
+      $(this).siblings('i').removeClass("focus");
+    })
+  }
+  // 机构的模糊搜索
+  function query() {
+    var name = $("#fName").val();
+//    name = name.replace("选择机构","");
+//    $.getJSON("/front/org/query", {query: name}, function (data) {
+//      var result=name.replace(/(^\s+)|(\s+$)/g,"");
+//      if(result.length==0){
+//        $("#query-list").html("");
+//        $(".login_nav dl").removeClass("is-show");
+//        return ;
+//      }
+      var htmls = "";
+//      if(data.data.list.length>0){
+//        $.each(data.data.list, function (index, org) {
+//          htmls += '<dd><a href="javascript:;" onclick="chooseOrg(' + org.fid + ',\'' + org.orgName + '\')">' + org.orgName + '</a></dd>';
+//        });
+//      }else{
+        htmls += '<dd><a href="javascript:;">无搜索结果</a></dd>';
+//      }
+      $("#query-list").html(htmls);
+      $(".login_nav dl").addClass("is-show");
+//    });
+  }
+</script>
+</body>
+
+</html>

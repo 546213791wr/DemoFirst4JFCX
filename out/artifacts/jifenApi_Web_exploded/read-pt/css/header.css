@@ -1,0 +1,382 @@
+header {
+  width: 100%;
+  margin: 0 auto;
+  height: 70px;
+  background: #fff;
+  text-align: left;
+  position: fixed;
+  top: 0;
+  z-index: 4;
+  box-shadow: 0px 2px 10px 0px rgba(21, 112, 138, 0.11);
+}
+header .header1{
+  width: 1200px;
+  margin: 0 auto;
+}
+header img {
+  display: inline-block;
+  vertical-align: top;
+  *display: inline;
+  *zoom: 1;
+}
+header .logo{
+  margin: 14px auto 0
+}
+header nav li {
+  display: inline-block;
+  vertical-align: top;
+  *display: inline;
+  *zoom: 1;
+  min-width: 45px;
+  height: 70px;
+  line-height: 70px;
+  text-align: center;
+  box-sizing: border-box;
+  cursor: pointer;
+  margin: 0 5px;
+  font-size: 14px;
+  color: #333;
+}
+header nav li.user{
+  width:112px;
+}
+header nav li a {
+  display: inline-block;
+  vertical-align: top;
+  *display: inline;
+  *zoom: 1;
+  width: 100%;
+  font-size: 14px;
+  color: #333;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+header nav li a.current{
+  color: #2795F7;
+}
+header nav li a:hover {
+  color: #2795F7;
+}
+header nav li.more:hover {
+  background: #fff;
+
+}
+header nav li.more:hover .navlist_btn{
+  color: #68d359;
+}
+header div.search {
+  display: inline-block;
+  vertical-align: top;
+  *display: inline;
+  *zoom: 1;
+  width: 210px;
+  height: 32px;
+  margin: 20px auto;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  -ms-border-radius: 15px;
+  border-radius: 15px;
+  position: relative;
+  background: #F2F7FC;
+}
+header div.search span.search_option {
+  display: inline-block;
+  vertical-align: top;
+  *display: inline;
+  *zoom: 1;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
+  width: 54px;
+  height: 30px;
+  line-height: 30px;
+  font-size: .75rem;
+  color: #666;
+  cursor: pointer;
+  text-align: center
+}
+
+header div.search input[type='text'] {
+  display: inline-block;
+  vertical-align: top;
+  *display: inline;
+  *zoom: 1;
+  width: 100%;
+  padding-left:40px;
+  height: 30px;
+  border: none;
+  font-size: .75rem;
+  color: #ccc;
+  background-color: transparent;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+header div.search .icon-search{
+  background: url("../img/search.png") no-repeat;
+  background-position: center center;
+}
+/*头部-input搜索框修改placeholder字体颜色*/
+header div.search input::-webkit-input-placeholder{
+  color: #cccccc;
+}
+header div.search input:-moz-placeholder{
+  color: #cccccc;
+}
+header div.search input::-moz-placeholder{
+  color: #cccccc;
+}
+header div.search input:-ms-input-placeholder{
+  color: #cccccc;
+}
+
+header div.search input[type='button'] {
+  top: 0;
+  right: 0;
+  bottom: auto;
+  left: auto;
+  z-index: 3;
+  position: absolute;
+  border: none;
+  cursor: pointer;
+  display: block;
+  width: 40px;
+  height: 30px;
+  background: rgba(255, 255, 255, 0);
+  outline: 0
+}
+
+header div.search i {
+  left: 0;
+  top:0;
+  height: 30px;
+  width: 40px;
+  z-index: 2;
+  position: absolute;
+  color: #ccc
+}
+
+header div.search dl,
+.data_report .term1 .list{
+  -webkit-box-shadow: 0 0 5px rgba(53, 42, 9, 0.3);
+  -moz-box-shadow: 0 0 5px rgba(53, 42, 9, 0.3);
+  box-shadow: 0 0 5px rgba(53, 42, 9, 0.3);
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  border-radius: 3px;
+  top: 35px;
+  right: auto;
+  bottom: auto;
+  left: 0;
+  z-index: 99990;
+  position: absolute;
+  display: none;
+  width: 48px;
+  border: solid 1px #ddd;
+  background: #fff
+}
+
+header div.search dl dd,
+.data_report .term1 .list dd{
+  padding: 4px
+}
+
+header div.search dl dd a,
+.data_report .term1 .list a{
+  display: inline-block;
+  vertical-align: top;
+  *display: inline;
+  *zoom: 1;
+  width: 100%;
+  height: 100%;
+  font-size: .75rem;
+  color: #666;
+  text-align: center
+}
+
+header div.search dl dd a:hover,
+.data_report .term1 .list a:hover{
+  color: #56be47;
+  background: #f7f7f7
+}
+
+header div.search .is-show {
+  display: block;
+  animation: fadeUser .2s linear 0s 1
+}
+.logoff .is-show{
+  display: block !important;
+}
+@keyframes fadeUser {
+  0% {
+    opacity: 0;
+    top: 75px;
+  }
+  100% {
+    opacity: 1;
+    top: 35px
+  }
+}
+
+footer {
+  *height: 1%;
+  width: 100%;
+  font-size: .75rem;
+  background-color: #fff;
+  padding: 8px 0;
+}
+footer p{
+  font-size: 12px;
+  color: #333333;
+  line-height: 1.5;
+}
+
+.navlist1,
+.navuser1{
+  position: relative;
+}
+.navlist1 .navlist_btn{
+  display: inline-block;
+  vertical-align: top;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
+  width: 100%;
+  font-size: 1.75rem;
+  color: #999;
+  cursor: pointer;
+  text-align: center;
+}
+header div.navlist1 dl,
+header div.navuser1 dl{
+  -webkit-box-shadow: 0 0 5px rgba(53, 42, 9, 0.3);
+  -moz-box-shadow: 0 0 5px rgba(53, 42, 9, 0.3);
+  box-shadow: 0 0 5px rgba(53, 42, 9, 0.3);
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  border-radius: 4px;
+  top: 60px;
+  right: auto;
+  bottom: auto;
+  left: 0;
+  z-index: 9;
+  position: absolute;
+  padding: 4px;
+  display: none;
+  border: solid 1px #ddd;
+  background: #fff;
+  width: 100%;
+  line-height: 32px;
+}
+header div.navuser1 dl:before{
+  position: absolute;
+  top:-10px;
+  content:'';
+  left: 50%;
+  margin-left: -8px;
+  border-bottom:10px solid #ddd;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+}
+header div.navuser1 dl:after{
+  position: absolute;
+  top:-8px;
+  content:'';
+  left: 50%;
+  margin-left: -6px;
+  border-bottom:8px solid #fff;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+}
+header div.navlist1 .is-show,
+header div.navuser1 .is-show{
+  display: block;
+  animation: fadeUser1 .2s linear 0s 1;
+}
+@keyframes fadeUser1 {
+  0% {
+    opacity: 0;
+    top: 100px
+  }
+  100% {
+    opacity: 1;
+    top: 70px
+  }
+}
+header div.navlist1 dl dd a,
+header div.navuser1 dl dd a {
+  display: inline-block;
+  vertical-align: top;
+  font-size: 16px;
+  color: #1c1c1c;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-radius: 2px;
+}
+header div.navlist1 dl dd a:hover{
+  background-color: #f8f8f8;
+}
+@media screen and (max-width: 1300px) {
+  .new_win{
+    position: absolute;
+    top: 80%;
+  }
+}
+.header1{
+  margin:0 auto;
+  width: 1280px;
+  height: 70px;
+  background-color: white;
+}
+header .navuser_btn{
+ text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+header .navuser_btn img {
+  margin-right: 5px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+header div.navuser1 dl{
+  width:112px;
+  box-sizing: border-box;
+}
+header div.navuser1 dl dd a{
+  font-size: 12px;
+  text-align: center;
+  color: #000;
+}
+header div.navuser1 dl dd a:hover{
+  background-color: #f6f6f6;
+}
+/*header 修改部分*/
+header .qrcode1,
+header .qrcode2{
+  position: relative;
+}
+ header .qrcode1>img,
+ header .qrcode2>img{
+   position: absolute;
+   top:50px;
+   left:50%;
+   margin-left: -48px;
+   width: 96px;
+   height: 106px;
+ }
+ header .floatr{
+   float: right;
+   margin-left: 20px;
+ }

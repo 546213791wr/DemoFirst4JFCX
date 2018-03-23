@@ -1,0 +1,28 @@
+用户中心操作日志记录接口
+
+https://passport2-api.chaoxing.com/api/synclog?version=194137935&enc=9acc819df632ddc22038f649fd0800c0
+
+key：uWwjeEKsri
+version 初始化：194137935
+enc md5（version+key）。
+
+
+需要的结果：
+
+pages: 100,
+version: 194138060,
+{
+newvalue: "59348381",
+time: "2018-01-10 13:55:08",
+id: 0,
+type: "shift",    // 这个type=shift 表示合并。
+oldvalue: "65392991"
+},
+
+
+调用过程：
+1、version每次递增， 最大值为接口返回的version。 每次version++， 传入version的值小于接口返回的verion。
+2、开启一个定时器 1h/次。
+3、version ++ 本地要做一个保存。 下次定时任务的起始version就是上次保存的值。
+194138061
+

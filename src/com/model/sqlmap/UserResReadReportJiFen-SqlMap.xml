@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+
+    <resultMap id="RM.UserResReadReportJiFen" class="com.model.UserResReadReportJiFen">
+        <result property="id" column="id"/>
+        <result property="uid" column="uid"/>
+        <result property="resId" column="res_id"/>
+        <result property="jiFenScore" column="jifen_score"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="UserResReadReportJiFen.columns">
+	    <![CDATA[
+        id, uid, res_id, jifen_score, create_time
+	    ]]>
+	</sql>
+	
+    <insert id="UserResReadReportJiFen.insert" >
+    <![CDATA[
+        INSERT INTO plt_user_read_report_jifen (
+        	id,
+        	uid,
+        	res_id,
+        	jifen_score,
+        	create_time
+        ) VALUES (
+        	#id#,
+        	#uid#,
+        	#resId#,
+        	#jiFenScore#,
+        	#createTime#
+        )
+    ]]>
+    <!--
+    mysql:		type="post" SELECT  select last_insert_id()
+    sqlserver:	type="post" SELECT  @@identity  AS  ID
+    oracle:		type="pre" 	SELECT  sequenceName.nextval AS ID FROM DUAL
+    DB2:		type="pre"	values nextval for sequenceName
+    -->
+        <selectKey resultClass="java.lang.Integer" type="post" keyProperty="id" >
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="UserResReadReportJiFen.update" >
+    <![CDATA[
+        UPDATE plt_user_read_report_jifen SET
+	        uid = #uid#,
+	        res_id = #resId#,
+	        jifen_score = #jiFenScore#,
+	        create_time = #createTime#
+        WHERE
+	        id = #id# 
+    ]]>
+    </update>
+
+    <delete id="UserResReadReportJiFen.delete">
+    <![CDATA[
+        DELETE FROM plt_user_read_report_jifen WHERE id = #id#
+    ]]>
+    </delete>
+    
+    <select id="UserResReadReportJiFen.getById" resultMap="RM.UserResReadReportJiFen">
+	    SELECT <include refid="UserResReadReportJiFen.columns"/>
+	    <![CDATA[
+	        FROM plt_user_read_report_jifen 
+	        WHERE 
+		        id = #id# 
+	    ]]>
+    </select>
+
+    <select id="UserResReadReportJiFen.getByUidResId" resultMap="RM.UserResReadReportJiFen">
+	    SELECT <include refid="UserResReadReportJiFen.columns"/>
+	    <![CDATA[
+	        FROM plt_user_read_report_jifen
+	        WHERE uid = #uid#
+		      AND res_id = #resId#
+	    ]]>
+    </select>
+
+</sqlMap>
+

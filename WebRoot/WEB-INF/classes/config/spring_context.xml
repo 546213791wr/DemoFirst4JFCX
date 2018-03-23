@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:tool="http://www.springframework.org/schema/tool"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xsi:schemaLocation=
+		   "http://www.springframework.org/schema/aop     http://www.springframework.org/schema/aop/spring-aop.xsd
+			http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+			http://www.springframework.org/schema/jee     http://www.springframework.org/schema/jee/spring-jee.xsd
+			http://www.springframework.org/schema/tx      http://www.springframework.org/schema/tx/spring-tx.xsd
+			http://www.springframework.org/schema/task    http://www.springframework.org/schema/task/spring-task.xsd
+			http://www.springframework.org/schema/util    http://www.springframework.org/schema/util/spring-util.xsd
+			http://www.springframework.org/schema/tool    http://www.springframework.org/schema/tool/spring-tool.xsd
+			http://www.springframework.org/schema/cache   http://www.springframework.org/schema/cache/spring-cache.xsd">
+	
+	
+	<!-- message -->
+	<util:properties id="message" location="classpath:message.properties"/>
+	
+	<!-- 加载所有的配置文件到上下文 -->
+	<context:property-placeholder location="classpath*:*.properties"/>
+
+    <!-- 使AspectJ注解生效：自动为匹配AspectJ注解的类生成代理对象 -->
+    <aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+
+    <bean id="userLevelAspect" class="com.aop.UserLevelAspect">
+    </bean>
+
+	<!-- i18n -->
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+	    <!-- 国际化信息所在的文件名 -->                     
+	    <property name="basename" value="message" />   
+	    <!-- 如果在国际化资源文件中找不到对应代码的信息，就用这个代码作为名称  -->               
+	    <property name="useCodeAsDefaultMessage" value="true" />           
+	</bean>
+	
+	<!-- 配置扫描路径 -->
+	<context:component-scan base-package="com.**.service.**">
+		<!-- 只扫描Service，也可以添加Repostory，但是要把Controller排除在外，Controller由spring-mvc.xml去加载 -->
+		<!-- <context:include-filter type="annotation" expression="org.springframework.stereotype.Service" /> -->
+     	<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+	
+	<!-- task -->
+	<task:executor id="taskExecutor" pool-size="18"/><!-- ThreadPoolTaskExecutor  -->
+	<task:scheduler id="taskScheduler" pool-size="12"/><!-- ThreadPoolTaskScheduler  -->
+    <task:annotation-driven executor="taskExecutor" scheduler="taskScheduler"/>
+    
+    
+	<context:property-placeholder location="classpath:jdbc.properties"/>
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <!-- 基本属性 url、user、password -->
+        <property name="url" value="${connection.url}"/>
+        <property name="username" value="${connection.username}"/>
+        <property name="password" value="${connection.password}"/>
+
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="${druid.initialSize}"/>
+        <property name="minIdle" value="${druid.minIdle}"/>
+        <property name="maxActive" value="${druid.maxActive}"/>
+
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="${druid.maxWait}"/>
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="${druid.timeBetweenEvictionRunsMillis}" />
+
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="${druid.minEvictableIdleTimeMillis}" />
+        <property name="validationQuery" value="${druid.validationQuery}" />
+        <property name="testWhileIdle" value="${druid.testWhileIdle}" />
+        <property name="testOnBorrow" value="${druid.testOnBorrow}" />
+        <property name="testOnReturn" value="${druid.testOnReturn}" />
+
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小  如果用Oracle，则把poolPreparedStatements配置为true，mysql可以配置为false。-->
+        <property name="poolPreparedStatements" value="${druid.poolPreparedStatements}" />
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="10" />
+
+        <!-- 配置监控统计拦截的filters -->
+        <property name="filters" value="${druid.filters}" />
+    </bean>
+    
+    <!-- Transactional -->
+    <tx:annotation-driven transaction-manager="txManager" />
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <!-- log4jdbc -->
+    <bean id="log4jdbcInterceptor" class="net.sf.log4jdbc.DataSourceSpyInterceptor" />
+    <bean id="dataSourceLog4jdbcAutoProxyCreator" class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+       <property name="interceptorNames">
+           <list>
+              <value>log4jdbcInterceptor</value>
+           </list>
+       </property>
+       <property name="beanNames">
+           <list>
+              <value>dataSource</value>
+           </list>
+       </property>
+    </bean>
+
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="defaultEncoding" value="utf-8" />
+		<property name="maxUploadSize" value="104857600" />
+		<property name="maxInMemorySize" value="40960" />
+	</bean>
+
+
+	<!-- Spring JDBC -->
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+    	<property name="dataSource" ref="dataSource"/>
+    </bean>
+    
+    <!-- Spring iBatis -->
+    <bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+    	<property name="configLocation" value="classpath:sql-map-config.xml"/>
+    	<property name="mappingLocations" value="classpath*:/com/**/model/**/*SqlMap.xml"/>
+    	<property name="dataSource" ref="dataSource"/>
+    </bean>
+    <bean id="sqlMapClientTemplate" class="org.springframework.orm.ibatis.SqlMapClientTemplate">
+    	<property name="sqlMapClient" ref="sqlMapClient"/>
+    </bean>
+    
+
+	<bean class="com.util.SpringContextHolder"/>
+
+    <!-- Bean -->
+    <util:list id="fastJsonSerializerFeature">
+        <!--
+        QuoteFieldNames             输出key时是否使用双引号,默认为true
+        WriteMapNullValue            是否输出值为null的字段,默认为false
+        WriteNullNumberAsZero        数值字段如果为null,输出为0,而非null
+        WriteNullListAsEmpty        List字段如果为null,输出为[],而非null
+        WriteNullStringAsEmpty        字符类型字段如果为null,输出为"",而非null
+        WriteNullBooleanAsFalse        Boolean字段如果为null,输出为false,而非null
+        -->
+        <!--NULL过滤-->
+        <!-- 空值继续输出 -->
+        <value>WriteMapNullValue</value>
+        <value>WriteNullListAsEmpty</value>
+        <value>WriteNullNumberAsZero</value>
+        <value>WriteNullStringAsEmpty</value>
+        <value>WriteNullBooleanAsFalse</value>
+        <!-- 防止循环引用 -->
+        <value>DisableCircularReferenceDetect</value>
+        <!-- 格式化日期,默认格式为：yyyy-MM-dd HH:mm:ss -->
+        <value>WriteDateUseDateFormat</value>
+        <value>SortField</value>
+        <!-- 斜杠处理WriteSlashAsSpecial -->
+    </util:list>
+    <bean id="fastJsonHttpMessageConverter" class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+        <property name="supportedMediaTypes" value="application/json;charset=UTF-8"/>
+        <property name="features" ref="fastJsonSerializerFeature"/>
+    </bean>
+
+</beans>
+

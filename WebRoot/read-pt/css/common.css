@@ -1,0 +1,80 @@
+blockquote, body, code, dd, div, dl, dt, fieldset, form, h1, h2, h3, h4, h5, h6, html, input, legend, li, menu, ol, p, pre, td, textarea, th, ul {
+  margin: 0;
+  padding: 0
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0
+}
+
+fieldset, img {
+  display: block;
+  border: 0 !important
+}
+
+address, caption, cite, code, dfn, em, strong, th, var {
+  font-style: normal
+}
+
+li {
+  list-style: none
+}
+
+caption, th {
+  text-align: left
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-size: 100%
+}
+
+q:after, q:before {
+  content: ''
+}
+
+abbr, acronym {
+  border: 0;
+  font-variant: normal
+}
+
+sup {
+  vertical-align: text-top
+}
+
+sub {
+  vertical-align: text-bottom
+}
+
+input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit
+}
+
+button, input, select {
+  outline: medium none;
+  vertical-align: middle
+}
+
+legend {
+  color: #000
+}
+
+article, aside, dialog, figure, footer, header, hgroup, menu, nav, section {
+  display: block
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  font-family: Arial, "Microsoft YaHei", Helvetica;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent
+}
+
+a, a:hover, a:link, a:visited {
+  text-decoration: none
+}

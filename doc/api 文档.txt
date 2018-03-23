@@ -1,0 +1,30 @@
+## 2.1 章节目录
+### 2.1.1 章节子目录
+接口地址|http://t.moonsinfo.com/api/user/{userId}/next-all?currentPageNum={currentPageNum}&pageSize={pageSize}
+:----| :---
+请求方法|POST/GET
+请求参数|userId 当前用户id
+请求参数|userName 当前用户名,即手机号。
+请求参数|currentPageNum 当前页码
+请求参数|pageSize 每页条数：默认10条
+
+```
+业务说明：
+1、查询当前用户名下一级会员。
+
+```
+请求地址实例：
+1、http://t.moonsinfo.com/api/user/3/next-all?userName=MIA1&currentPageNum=2&pageSize=5
+2、http://t.moonsinfo.com/api/user/3/next-all?currentPageNum=2&pageSize=5
+返回内容
+
+成功：
+```
+返回内容----
+```
+
+
+
+11
+
+

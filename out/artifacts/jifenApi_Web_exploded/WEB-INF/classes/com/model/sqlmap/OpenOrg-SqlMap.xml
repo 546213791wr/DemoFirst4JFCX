@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+		"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+
+	<resultMap id="RM.OpenOrg" class="com.model.OpenOrg">
+		<result property="id" column="id"/>
+		<result property="fid" column="fid"/>
+		<result property="orgName" column="org_name"/>
+		<result property="domainUrl" column="domain_url"/>
+		<result property="openTime" column="open_time"/>
+		<result property="status" column="status"/>
+		<result property="publish" column="publish"/>
+		<result property="logoUrl" column="logo_url"/>
+		<result property="gid" column="gid"/>
+		<result property="unique" column="unique"/>
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="OpenOrg.columns">
+		<![CDATA[
+        id, fid, org_name, domain_url, open_time ,status,publish,logo_url,gid,`unique`
+	    ]]>
+	</sql>
+
+	<insert id="OpenOrg.insert" >
+		<![CDATA[
+        INSERT INTO plt_open_org (
+        	id,
+        	fid,
+        	org_name,
+        	domain_url,
+        	open_time,
+        	status,
+        	publish,
+        	logo_url,
+        	gid,
+        	`unique`
+        ) VALUES (
+        	#id#,
+        	#fid#,
+        	#orgName#,
+        	#domainUrl#,
+        	#openTime#,
+        	#status#,
+        	#publish#,
+        	#logoUrl#,
+        	#gid#,
+        	#unique#
+        )
+    ]]>
+		<!--
+        mysql:		type="post" SELECT  select last_insert_id()
+        sqlserver:	type="post" SELECT  @@identity  AS  ID
+        oracle:		type="pre" 	SELECT  sequenceName.nextval AS ID FROM DUAL
+        DB2:		type="pre"	values nextval for sequenceName
+        -->
+		<selectKey resultClass="java.lang.Integer" type="post" keyProperty="id" >
+			select last_insert_id()
+		</selectKey>
+	</insert>
+	<select id="OpenOrg.getListNoCity" resultMap="RM.OpenOrg">
+		SELECT <include refid="OpenOrg.columns"/> from plt_open_org where fid not in (SELECT  fid from plt_org_city)
+			<isNotEmpty prepend="AND" property="orgName">
+				org_name like concat('%',#orgName#,'%')
+			</isNotEmpty>
+	</select>
+
+	<select id="OpenOrg.getOrgsByOrgName" resultMap="RM.OpenOrg">
+		SELECT id,
+        	fid,
+        	org_name,
+        	domain_url,
+        	open_time,
+        	status,
+        	publish,
+        	logo_url,
+        	gid,
+        	`unique`
+        	 from plt_open_org where org_name LIKE  CONCAT( '%', #orgName#, '%' );
+	</select>
+	
+	
+	<update id="OpenOrg.update" >
+		<![CDATA[
+        UPDATE plt_open_org SET
+	        fid = #fid#,
+	        org_name = #orgName#,
+	        domain_url = #domainUrl#,
+	        open_time = #openTime#,
+	        status=#status#,
+	        publish=#publish#,
+	        logo_url=#logoUrl#,
+	        gid=#gid#,
+	        `unique`=#unique#
+        WHERE
+	        id = #id#
+    ]]>
+	</update>
+
+	<delete id="OpenOrg.delete">
+		<![CDATA[
+        DELETE FROM plt_open_org WHERE
+        id = #id#
+    ]]>
+	</delete>
+
+	<delete id="OpenOrg.deleteByGid">
+		<![CDATA[
+        DELETE FROM plt_open_org WHERE
+        gid = #gid#
+    ]]>
+	</delete>
+
+	<select id="OpenOrg.getById" resultMap="RM.OpenOrg">
+		SELECT <include refid="OpenOrg.columns"/>
+		<![CDATA[
+	        FROM plt_open_org
+	        WHERE
+		        id = #id#
+	    ]]>
+	</select>
+
+	<select id="OpenOrg.getByDomain" resultMap="RM.OpenOrg">
+		SELECT <include refid="OpenOrg.columns"/>
+		<![CDATA[
+	        FROM plt_open_org
+	        WHERE
+		        domain_url = #domain#
+	    ]]>
+	</select>
+
+    <!-- 根据机构部名称查询 -->
+    <select id="OpenOrg.getByOrgName" resultMap="RM.OpenOrg">
+		SELECT <include refid="OpenOrg.columns"/>
+		<![CDATA[
+	        FROM plt_open_org
+	        WHERE
+		        org_name = #orgName#
+	    ]]>
+	</select>
+
+	<!-- 查询状态正常得机构 -->
+	<select id="OpenOrg.getByDomainAndStatus" resultMap="RM.OpenOrg">
+		SELECT <include refid="OpenOrg.columns"/>
+		<![CDATA[
+	        FROM plt_open_org
+	        WHERE
+		        domain_url = #domain#
+		        and status = 1
+		        and publish = 1
+	    ]]>
+	</select>
+
+	<!-- 查询机构 -->
+	<select id="OpenOrg.queryStr" resultMap="RM.OpenOrg">
+		SELECT <include refid="OpenOrg.columns"/>
+		<![CDATA[
+	        FROM plt_open_org
+	        WHERE
+		        org_name like concat('%',#query#,'%') and status='1' limit 3;
+	    ]]>
+	</select>
+
+	<select id="OpenOrg.getByFid" resultMap="RM.OpenOrg">
+		SELECT <include refid="OpenOrg.columns"/>
+		<![CDATA[
+	        FROM plt_open_org
+	        WHERE
+		        fid = #fid#
+	    ]]>
+	</select>
+
+	<select id="OpenOrg.getByFidAndStatus" resultMap="RM.OpenOrg">
+		SELECT <include refid="OpenOrg.columns"/>
+		<![CDATA[
+	        FROM plt_open_org
+	        WHERE
+		        fid = #fid#
+		        and status = 1
+		        and publish = 1
+	    ]]>
+	</select>
+
+	<sql id="OpenOrg.findPage.where">
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="query.id">
+				id = #query.id#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="query.fid">
+				fid = #query.fid#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="query.orgName">
+				org_name like concat('%',#query.orgName#,'%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="query.domainUrl">
+				domain_url = #query.domainUrl#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="query.openTime">
+				open_time = #query.openTime#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="query.status">
+				status = #query.status#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="query.publish">
+				publish = #query.publish#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="query.gid">
+				gid = #query.gid#
+			</isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="condition.fids">
+				fid in ($condition.fids$)
+			</isNotEmpty>
+
+		</dynamic>
+	</sql>
+
+	<select id="OpenOrg.list" resultMap="RM.OpenOrg">
+		SELECT <include refid="OpenOrg.columns"/> FROM plt_open_org
+		<include refid="OpenOrg.findPage.where"/>
+	</select>
+
+	<select id="OpenOrg.findPage.count" resultClass="java.lang.Integer">
+		SELECT count(*) FROM plt_open_org <include refid="OpenOrg.findPage.where"/>
+	</select>
+
+	<select id="OpenOrg.findPage" resultMap="RM.OpenOrg">
+		SELECT <include refid="OpenOrg.columns"/> FROM plt_open_org
+		<include refid="OpenOrg.findPage.where"/>
+		<isNotEmpty property="sortString">
+			$sortString$
+		</isNotEmpty>
+		limit #startNumber#, #pageSize#
+	</select>
+
+
+
+
+
+    <select id="OpenOrg.getByFids" resultMap="RM.OpenOrg">
+        SELECT <include refid="OpenOrg.columns"/> FROM plt_open_org
+          where fid in ($strFids$)
+    </select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<!--wr-->
+	<select id="OpenOrg.getByDomain2" resultClass="java.lang.Integer">
+		SELECT count(*)
+		<![CDATA[
+	        FROM plt_open_org
+	        WHERE
+		        domain_url = #domain#
+	    ]]>
+	</select>
+
+
+	<!--联合查询机构和一级模块-->
+
+	<select id="OpenOrg.getModules.count" resultClass="java.lang.Integer">
+		select count(DISTINCT pm.id)
+		from plt_modules_org pmo
+		right JOIN plt_open_org poo ON
+		poo.fid=pmo.fid
+		right JOIN plt_modules pm ON
+		pmo.modules_id=pm.id
+		where pm.pid=0
+		and pm.status=1 and pmo.fid is not null
+		<isNotEmpty prepend="AND" property="query.orgName">
+			poo.org_name like concat('%',#query.orgName#,'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="query.fid">
+			poo.fid =#query.fid#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="query.ageGroupId">
+			pm. age_group_id= #query.ageGroupId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="query.userTypeId">
+			pm.user_type_id = #query.userTypeId#
+		</isNotEmpty>
+	</select>
+
+	<select id="OpenOrg.getModules"  resultClass="java.util.HashMap" >
+		select
+			pm.id as id ,
+			poo.org_name as orgName ,
+			poo.fid as fid ,
+		    pm.name as name,
+		    pm.age_group_id as ageGroupId,
+		    pm.user_type_id as userTypeId,
+			pmo.id pmoId,
+			pm.sequnce
+		from plt_modules_org pmo
+		right JOIN plt_open_org poo ON
+		poo.fid=pmo.fid
+		right JOIN plt_modules pm ON
+		pmo.modules_id=pm.id
+		where pm.pid=0
+		and pm.status=1 and pmo.fid is not null
+		<isNotEmpty prepend="AND" property="query.orgName">
+			poo.org_name like concat('%',#query.orgName#,'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="query.fid">
+			poo.fid =#query.fid#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="query.ageGroupId">
+			pm. age_group_id= #query.ageGroupId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="query.userTypeId">
+			pm.user_type_id = #query.userTypeId#
+		</isNotEmpty>
+
+		ORDER BY pm.sequnce desc
+		limit #startNumber#, #pageSize#
+	</select>
+
+	<!--联合查询机构和一级阅读模块-->
+	<select id="OpenOrg.getReadModules.count" resultClass="java.lang.Integer">
+		select count(pmo.id)
+		from plt_modules_org pmo
+		right JOIN plt_open_org poo ON
+		poo.fid=pmo.fid
+		right JOIN plt_modules pm ON
+		pmo.modules_id=pm.id
+		where pm.pid=0
+		and pm.status=1 and pmo.fid is not null
+		and pm.name LIKE concat('%','阅读','%')
+		<isNotEmpty prepend="AND" property="query.orgName">
+			poo.org_name like concat('%',#query.orgName#,'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="query.fid">
+			poo.fid =#query.fid#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="query.ageGroupId">
+			pm. age_group_id= #query.ageGroupId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="query.userTypeId">
+			pm.user_type_id = #query.userTypeId#
+		</isNotEmpty>
+	</select>
+
+	<select id="OpenOrg.getReadModules"  resultClass="java.util.HashMap" >
+		select
+		pm.id as id ,
+		poo.org_name as orgName ,
+		poo.fid as fid ,
+		pm.name as name,
+		pm.age_group_id as ageGroupId,
+		pm.user_type_id as userTypeId,
+		pmo.id pmoId,
+		pm.sequnce
+		from plt_modules_org pmo
+		right JOIN plt_open_org poo ON
+		poo.fid=pmo.fid
+		right JOIN plt_modules pm ON
+		pmo.modules_id=pm.id
+		where pm.pid=0
+		and pm.status=1 and pmo.fid is not null
+		and pm.name LIKE concat('%','阅读','%')
+		<isNotEmpty prepend="AND" property="query.orgName">
+			poo.org_name like concat('%',#query.orgName#,'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="query.fid">
+			poo.fid =#query.fid#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="query.ageGroupId">
+			pm. age_group_id= #query.ageGroupId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="query.userTypeId">
+			pm.user_type_id = #query.userTypeId#
+		</isNotEmpty>
+
+		ORDER BY pm.sequnce desc
+		limit #startNumber#, #pageSize#
+	</select>
+	
+	<select id="OpenOrg.getAll" resultMap="RM.OpenOrg">
+		SELECT * FROM `plt_open_org` GROUP BY fid
+	</select>
+
+	<select id="OpenOrg.getCityOrg" resultMap="RM.OpenOrg">
+		SELECT
+			poo.*
+		FROM
+			plt_open_org poo
+			JOIN plt_org_city poc ON poo.fid = poc.fid
+			AND poc.city_code =#cityCode#;
+	</select>
+
+	<select id="OpenOrg.getByGid" resultMap="RM.OpenOrg">
+		SELECT * FROM plt_open_org where gid = #gid# GROUP BY fid
+	</select>
+
+	<select id="OpenOrg.getListNoGroup" resultMap="RM.OpenOrg">
+		SELECT * FROM plt_open_org where gid is null GROUP BY fid
+	</select>
+
+	<select id="OpenOrg.getListNoUrl" resultMap="RM.OpenOrg">
+		SELECT * FROM plt_open_org where domain_url is null AND open_time  > '2017-12-21 00:00:00' GROUP BY fid
+	</select>
+
+	<select id="OpenOrg.relevanceModule" resultClass="java.lang.Integer">
+		SELECT
+		COUNT(m1.id)
+		FROM
+		plt_modules m1
+		JOIN plt_modules_org m2 ON m2.modules_id = m1.id
+		AND m2.fid = #fid#
+		AND m1.age_group_id = #ageGroupId#
+		AND m1.user_type_id = #userTypeId#
+		AND m1. NAME LIKE CONCAT('%', '阅读', '%')
+	</select>
+
+	<select id="OpenOrg.getOrgByActivityId" resultMap="RM.OpenOrg">
+		SELECT
+			poo.*
+		FROM
+			plt_open_org poo
+		JOIN re_activity ra ON ra.org_id = poo.gid
+		AND ra.id =#id#
+	</select>
+
+</sqlMap>
+

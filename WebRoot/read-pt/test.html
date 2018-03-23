@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <title>超星校园阅读系统</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!--<link rel="stylesheet" href="css/style(1).css">-->
+  <link rel="stylesheet" href="css/font.css">
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="css/swiper.css">
+  <!-- 引入 ECharts 文件 -->
+  <script src="js/echarts.min.3.7.js"></script>
+  <!--<link rel="stylesheet" href="css/layer.css" id="layui_layer_skinlayercss">-->
+  <link rel="stylesheet" href="css/test.css">
+</head>
+<body>
+
+
+<link rel="shortcut icon" href="http://cs.xueya.test.basicedu.chaoxing.com/favicon.ico" type="image/x-icon">
+<script src="js/jquery.min.js"></script>
+<script src="js/html5.js"></script>
+<header id="fixed">
+  <div class="header1">
+
+    <img src="img/logo.png" alt="Logo">
+
+
+    <nav>
+
+      <li><a href="http://cs.xueya.test.basicedu.chaoxing.com/front/index">首页</a></li>
+
+
+      <li><a data-type="2" href="http://cs.xueya.test.basicedu.chaoxing.com/front/book/index?id=4000">阅读</a></li>
+
+
+      <li><a data-type="3"
+             href="http://cs.xueya.test.basicedu.chaoxing.com/front/course/course-type?moduleId=4007">课程</a></li>
+
+
+      <li><a data-type="4" href="javascript:void(0)" style="cursor:pointer">测评</a></li>
+
+
+      <li class="more">
+        <div class="navlist1">
+          <span class="navlist_btn">···</span>
+          <dl class="navlists2">
+
+
+            <dd><a href="http://cs.xueya.test.basicedu.chaoxing.com/front/activity/index">活动</a>
+            </dd>
+
+
+            <dd><a href="http://cs.xueya.test.basicedu.chaoxing.com/front/team/index">小组</a>
+            </dd>
+
+
+          </dl>
+        </div>
+      </li>
+
+
+      <div class="search">
+        <span class="search_option">测评</span>
+        <input type="text" name="searchKey" id="searchKey" placeholder="输入关键字" style="color: #666;">
+        <input type="button" value=" " onclick="toSearch()">
+        <i class="icon-search"></i>
+        <dl id="searchList">
+          <dd><a href="javascript:;" onclick="searchList(1)">阅读</a></dd>
+          <dd><a href="javascript:;" onclick="searchList(2)">课程</a></dd>
+          <dd id="evaluateA"><a href="javascript:;" onclick="searchList(3)">测评</a></dd>
+        </dl>
+      </div>
+      <li class="navnews">
+        <a href="javascript:;">
+          <i class="icon-news colorbd"></i>
+          <i class="unread_red"></i>
+        </a>
+
+        <div class="popnews_con scrollbar_light" style="">
+          <div class="popnews_lists">
+            <!--第一条消息-->
+
+
+            <ul class="popnews_list">
+              <p class="title">2018-01-23</p>
+
+
+              <li></li>
+              <li class=""><a href="http://cs.xueya.test.basicedu.chaoxing.com/front/tea-mission/2/to-publish?resId=53">xs38（1年级1班）通过了
+                <span class="colorgreen">《我的第一本科学漫画书·埃及金字塔历险记》的测评任务。</span></a></li>
+
+
+              <li></li>
+              <li class=""><a
+                href="http://cs.xueya.test.basicedu.chaoxing.com/front/tea-mission/2/to-publish?resId=185">xs38（1年级1班）通过了
+                <span class="colorgreen">《太空》的测评任务。</span></a></li>
+
+
+              <li></li>
+              <li class=""><a href="http://cs.xueya.test.basicedu.chaoxing.com/front/tea-mission/2/to-publish?resId=28">小学生01（2016级1班）通过了
+                <span class="colorgreen">《尼古拉的三个问题》的测评任务。</span></a></li>
+
+
+              <li></li>
+              <li class=""><a
+                href="http://cs.xueya.test.basicedu.chaoxing.com/front/tea-mission/2/to-publish?resId=332">xs03（1年级1班）通过了
+                <span class="colorgreen">《十兄弟》的测评任务。</span></a></li>
+
+
+              <li></li>
+              <li class=""><a href="http://cs.xueya.test.basicedu.chaoxing.com/front/class/report/1">xs01老师删除了发布给<span
+                class="colorGreen">1年级1班</span>的任务<span class="colorGreen">《洋葱头历险记》</span></a></li>
+
+
+              <li></li>
+              <li class=""><a href="http://cs.xueya.test.basicedu.chaoxing.com/front/class/report/1">js02老师删除了发布给<span
+                class="colorGreen">1年级1班</span>的任务<span class="colorGreen">《名人传》</span></a></li>
+
+
+              <li></li>
+              <li class=""><a href="http://cs.xueya.test.basicedu.chaoxing.com/front/class/report/1">js02老师删除了发布给<span
+                class="colorGreen">1年级1班</span>的任务<span class="colorGreen">《世界为谁存在》</span></a></li>
+
+
+              <li></li>
+              <li class=""><a href="http://cs.xueya.test.basicedu.chaoxing.com/front/class/report/1">xs01老师删除了发布给<span
+                class="colorGreen">1年级1班</span>的任务<span class="colorGreen">《西雅图酋长的宣言》</span></a></li>
+
+
+            </ul>
+
+            <ul class="popnews_list">
+              <p class="title">2018-01-24</p>
+
+
+              <li></li>
+              <li class=""><a
+                href="http://cs.xueya.test.basicedu.chaoxing.com/front/tea-mission/2/to-publish?resId=332">杨雪（1年级1班）通过了
+                <span class="colorgreen">《十兄弟》的测评任务。</span></a></li>
+
+
+              <li></li>
+              <li class=""><a
+                href="http://cs.xueya.test.basicedu.chaoxing.com/front/tea-mission/2/to-publish?resId=573">xs01（1年级1班）通过了
+                <span class="colorgreen">《曹冲称象》的测评任务。</span></a></li>
+
+
+            </ul>
+
+
+            <!--最后一条消息-->
+          </div>
+        </div>
+      </li>
+      <li class="user">
+
+
+        <div class="navuser1">
+          <div class="navuser_btn">
+            <img src="img/53051789_80">
+          </div>
+          <!--教师端-->
+
+          <dl class="navuser2 navuser2_teacher">
+            <dd><a href="http://i.mooc.chaoxing.com/space/index"><i class="icon-space"></i>我的空间</a>
+            </dd>
+            <dd><a href="javascript:void(0)" onclick="logout()"><i class="icon-exit"></i>退出</a></dd>
+          </dl>
+
+          <!--学生端-->
+
+        </div>
+
+
+      </li>
+
+      <li class="signli">
+        <!--未签到-->
+        <span class="fontS12 " id="sign1" onclick="signTsk()" style="display: block;">
+                        <span class="colorSign"><i class="icon-sign"></i>签到</span></span>
+        <!--已签到-->
+        <span class="fontS12 color666" id="sign2" onclick="viewSign()" style="display:none;"><span>已签到</span></span>
+        <!--签到弹窗-->
+        <div class="sign_win is-show" style="display: none;">
+          <s>×</s>
+          <div class="tit">
+
+            <img class="loginImg" src="img/qiandao.png" alt="未登录">
+          </div>
+          <div class="star">
+            <span class="sign_win_tip">今日签到成功！</span>
+            <div class="head_ico">
+              <i class="icon-star"></i>
+            </div>
+            <span id="tdStar"></span>
+          </div>
+          <p class="font14 color999">
+            <span id="ctEx"></span>
+          </p>
+          <ul class="step" id="stars">
+          </ul>
+          <ul class="sign_win_days">
+
+          </ul>
+          <div class="fontS12 color999">
+            ————已连续签到<span id="ctDays"></span>天————
+          </div>
+        </div>
+      </li>
+
+      <li class="fontS20 qrcode1">
+        <i class="icon-app color666"></i>
+
+        <img src="img/qrcode_login.png" alt="qrcode" style="display: none;">
+      </li>
+      <li class="fontS20 qrcode2">
+        <i class="icon-tencent color666"></i>
+
+        <img src="img/qrcode_login1.png" alt="qrcode" style="display: none;">
+      </li>
+
+
+    </nav>
+
+  </div>
+  <!--意见 反馈-->
+
+
+  <script type="text/javascript">
+    // header 水平滚动 absolute效果
+    window.onscroll = function () {
+      var sl = -Math.max(document.body.scrollLeft, document.documentElement.scrollLeft);
+      document.getElementById('fixed').style.left = sl + 'px';
+    }
+    //加载用户消息
+    function loadMsg(uid) {
+      $.ajax({
+        url: '',
+        success: function (json) {
+
+        }
+      })
+    }
+    $(function () {
+      var searchValue = "";
+      var searchType = "";
+      var ageGroupId = "1";
+      var uid = '53051789';
+
+      $.getJSON("/front/sign/isSignToday", function (json) {
+        console.log(json);
+        if (json.code == 1) {
+          $("#sign1").css("display", "block");
+          $("#sign2").css("display", "none");
+          $("#sign-msg").show();
+        } else {
+          $("#sign1").css("display", "none");
+          $("#sign2").css("display", "block");
+          $("#sign-msg").hide();
+        }
+      })
+      if (null != uid && uid != '') {
+        loadMsg(uid);
+      }
+      if (ageGroupId > 2) {
+        $("#evaluateA").remove();
+      }
+      if ('' != searchValue) {
+        $("#searchKey").val(searchValue);
+      }
+      if (searchType == '1') {
+        searchList(1);
+      } else if (searchType == '2') {
+        searchList(2);
+      } else {
+        searchList(3);
+
+        var menu = "";
+        if (menu == 1) {
+          $(".search_option").html("阅读");
+        } else if (menu == 2) {
+          $(".search_option").html("阅读");
+        } else if (menu == 3) {
+          $(".search_option").html("课程");
+        } else if (menu == 4) {
+          $(".search_option").html("测评");
+        } else if (menu == 5) {
+          $(".search_option").html("阅读");
+        } else if (menu == 6) {
+          $(".search_option").html("阅读");
+        }
+      }
+
+    });
+
+    $("#searchKey").keydown(function (event) {
+      if (event.which == 13) {
+        toSearch();
+      }
+    });
+
+    function searchList(num) {
+      if (num == 1) {
+        $(".search_option").html("阅读");
+        $("#searchList").removeClass("is-show");
+      } else if (num == 2) {
+        $(".search_option").html("课程");
+        $("#searchList").removeClass("is-show");
+      } else if (num == 3) {
+        $(".search_option").html("测评");
+        $("#searchList").removeClass("is-show");
+      }
+
+    }
+
+    function toSearch() {
+      var searchValue = $("#searchKey").val();
+      searchValue = encodeURI(encodeURI(searchValue));
+      //去除空格
+      var option = $(".search").find("span").html().replace(/(^\s*)|(\s*$)/g, "");
+      ;
+
+      if (searchValue == '' || searchValue == '请输入您要搜索的内容') {
+        alert("请输入您要搜索的内容");
+        return false;
+      } else {
+        if ("阅读" == option) {
+          window.location.href = "/front/search/search-book?searchValue=" + searchValue + "&searchType=1";
+        } else if ("课程" == option) {
+          window.location.href = "/front/search/search-course?searchValue=" + searchValue + "&searchType=2";
+          ;
+        } else if ("测评" == option) {
+          window.location.href = "/front/evaluate/index?name=" + searchValue + "&searchType=3";
+          ;
+        }
+      }
+
+    }
+
+    var loadingMsg = '<div class="loading" id="myloading">' +
+      ' <img src="/f_resources/img/loading.gif"/>' +
+      '<p style="font-size: 12px;color: #666"> <br/> 加载中······</p>' +
+      '</div>';
+
+    function evluate(url) {
+      $.ajax({
+        url: '/front/login/checkLogin',
+        success: function (json) {
+          var data = json.code;
+          if (data == 1) {
+            $.ajax({
+              url: '/front/evaluate/validat-teacher',
+              success: function (json) {
+                var data = json.code;
+                if (data == 1) {
+                  window.location = url;
+                } else {
+                  layer.msg("请先关联班级！");
+                  show_lay(2);
+                }
+              }
+            });
+          } else {
+            window.location = '/front/login';
+          }
+        }
+      });
+    }
+    //退出登录
+    function logout() {
+//            var url = "http://passport2.chaoxing.com/logout.html?refer=" + window.location.protocol + "//" + window.location.hostname+"/front/login";
+//            window.location.href = url;
+      $.getJSON('/front/login/log-out', function () {
+        if (window["context"] == undefined) {
+          if (!window.location.origin) {
+            window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+          }
+          window["context"] = location.origin + "/V6.0";
+        }
+        window.location.href = "http://passport2.chaoxing.com/logout.html?refer=" + window.location.origin;
+      })
+    };
+    //跳转登录
+    function toSubmit() {
+      window.location.href = '/front/login';
+    }
+
+
+    function signTsk() {
+      $.getJSON("/front/sign/isSignToday", function (json) {
+        if (json.code == 1) {
+          // 去签到
+          $.getJSON('/front/sign/index', function (json) {
+            if (json.code == 1) {
+              var tdStr = json.data.userSignDetail.integral;
+              var extend = json.data.userSignDetail.extendScore;
+              var tdScore = parseInt(tdStr) + parseInt(extend);
+              $("#tdStar").html("+" + tdScore);
+
+              var continueDays = json.data.userSignDetail.continuumDays;
+              if (extend > 0) {
+                $("#ctEx").html(' [其中连续签到' + continueDays + '天奖励 <span class="colorYellow"> ' + extend + '星币</span> ]');
+              }
+
+              $("#ctDays").html(continueDays);
+
+              var htmls = "";
+              var ctHtmls = "";
+              for (var i = 1; i < 8; i++) {
+                var html = "";
+                var ctHtml = "";
+                if (continueDays >= i) {
+                  html = '<li class="active">' +
+                    '<a>' +
+                    '<i class="icon-check"></i>' +
+                    '</a>' +
+                    '</li>';
+
+                  ctHtml = '<li class="activeGreen">' + i + '天</li>'
+
+                } else {
+                  html = '<li>' +
+                    '<a>' +
+                    '<i class="icon-check"></i>' +
+                    '</a>' +
+                    '</li>';
+                  ctHtml = '<li>' + i + '天</li>'
+                }
+                htmls += html;
+                ctHtmls += ctHtml;
+              }
+              $("#stars").html(htmls);
+              $("#ctDays").text(continueDays);
+              $(".sign_win_days").html(ctHtmls);
+              $(".sign_win").addClass("is-show");
+              $(".logOutPop").removeClass("is-show")
+              $("#sign1").css("display", "none");
+              $("#sign2").css("display", "block");
+            }
+          })
+        } else {
+          $("#sign1").css("display", "none");
+          $("#sign2").css("display", "block");
+
+        }
+
+      })
+
+      $("#sign-msg").hide();
+      $(".sign_win").show();
+
+    };
+
+    //已签到显示
+    function viewSign() {
+      $.getJSON("/front/sign/isSignToday", function (json) {
+        if (json.code == 0) {
+          //
+          var tdStr = json.data.userSignDetail.integral;
+          var extend = json.data.userSignDetail.extendScore;
+          var tdScore = parseInt(tdStr) + parseInt(extend);
+          $("#tdStar").html("+" + tdScore);
+
+          var continueDays = json.data.userSignDetail.continuumDays;
+          if (extend > 0) {
+            $("#ctEx").html(' [其中连续签到' + continueDays + '天奖励 <span class="colorYellow"> ' + extend + '星币</span> ]');
+          }
+
+          $("#ctDays").html(continueDays);
+
+          var htmls = "";
+          var ctHtmls = "";
+          for (var i = 1; i < 8; i++) {
+            var html = "";
+            var ctHtml = "";
+            if (continueDays >= i) {
+              html = '<li class="active">' +
+                '<a>' +
+                '<i class="icon-check"></i>' +
+                '</a>' +
+                '</li>';
+
+              ctHtml = '<li class="activeGreen">' + i + '天</li>'
+
+            } else {
+              html = '<li>' +
+                '<a>' +
+                '<i class="icon-check"></i>' +
+                '</a>' +
+                '</li>';
+              ctHtml = '<li>' + i + '天</li>'
+            }
+            htmls += html;
+            ctHtmls += ctHtml;
+          }
+          $("#stars").html(htmls);
+          $("#ctDays").text(continueDays);
+          $(".sign_win_days").html(ctHtmls);
+          $("#sign1").css("display", "none");
+          $("#sign2").css("display", "block");
+        } else {
+          $("#sign1").css("display", "none");
+          $("#sign2").css("display", "block");
+
+        }
+      });
+      $("#sign-msg").hide();
+      $(".sign_win").addClass("is-show");
+      $(".logOutPop").removeClass("is-show");
+      $(".sign_win").show();
+    }
+  </script>
+
+</header>
+
+
+<!-- 出题页面 -->
+<section class="task_nav">
+  <div class="default_nav">
+    <input type="hidden" id="paperId" value="">
+    <div class="crumb">
+      <a href="http://cs.xueya.test.basicedu.chaoxing.com/front/evaluate/index">测评</a> &gt; <a href="javascript:;">测评详情</a> &gt; <a href="javascript:;">题目编辑</a>
+    </div>
+    <h1>
+      <input type="hidden" id="resId" value="464">
+      《名人传》 测评题目编辑
+      <a href="javascript:;" class="border_link_f" onclick="newOpen()">+ 新增题目</a>
+    </h1>
+    <div class="editor">
+      <div class="nav_l" id="leftPane">
+        <div class="tit">已选择（<span id="uncan">0</span>）
+          <a href="javascript:;" id="submitPaper" onclick="submitpaper()">保存题目</a>
+        </div>
+        <div class="scroll" id="teacherQuestion">
+            <!--为空的情况-->
+          <div class="empty z-empty">
+            <img src="img/empty-item.png">
+            <dl>
+              <dt>还未选择题目，您可以：</dt>
+              <dd>1、从右侧可选题目中选择题目，点击右上角 +添加 按钮</dd>
+              <dd>2、直接从右侧将题目拖拽至左边</dd>
+              <dd>3、点击页面右上角 +新增题目 按钮自定义题目</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+      <div class="nav_r" id="rightPane">
+        <div class="tit">
+          可选择（<span id="can">17</span>）
+          <a href="javascript:;" class="grade">
+            <div id="show">全部维度<i class="icon-chevron-down"></i></div>
+          </a>
+          <dl class="grade_list">
+            <dd><a href="http://cs.xueya.test.basicedu.chaoxing.com/front/question/to-list?resId=464#">全部</a></dd>
+
+            <dd><a href="http://cs.xueya.test.basicedu.chaoxing.com/front/question/to-list?resId=464#">字词掌握</a></dd>
+
+            <dd><a href="http://cs.xueya.test.basicedu.chaoxing.com/front/question/to-list?resId=464#">信息提取</a></dd>
+
+            <dd><a href="http://cs.xueya.test.basicedu.chaoxing.com/front/question/to-list?resId=464#">归纳推理</a></dd>
+
+            <dd><a href="http://cs.xueya.test.basicedu.chaoxing.com/front/question/to-list?resId=464#">欣赏共情</a></dd>
+
+            <dd><a href="http://cs.xueya.test.basicedu.chaoxing.com/front/question/to-list?resId=464#">反思评价</a></dd>
+
+            <dd><a href="http://cs.xueya.test.basicedu.chaoxing.com/front/question/to-list?resId=464#">想象拓展</a></dd>
+
+          </dl>
+        </div>
+        <div class="scroll" id="allQuestion">
+          <div class="menu_list" id="35572">
+            <div class="menu_head">
+              <div class="test-tag">
+                <i>单选题</i>
+                <i>信息提取</i>
+                <i>超星校园阅读系统</i>
+              </div>
+              <h2>
+                <span>1</span> [单选题]《名人传》中描写的名人不包括：
+              </h2>
+              <div class="op">
+
+                <a href="javascript:;" id="35572a" class="border_link_f" onclick="removeQ(35572)">+ 添加</a>
+              </div>
+            </div>
+            <div class="menu_body">
+              <dl>
+                <dd>
+                  <p>A:泰戈尔<s class="result">正确答案</s></p>
+                </dd>
+                <dd>
+                  <p>B:托尔斯泰</p>
+                </dd>
+                <dd>
+                  <p>C:贝多芬</p>
+                </dd>
+                <dd>
+                  <p>D:米开朗琪罗</p>
+                </dd>
+                <p>
+                  <strong>解析：</strong>空
+                </p>
+              </dl>
+            </div>
+            <div class="hover" style="display: none;">
+              <i class="icon-angle-double-right"></i>
+            </div>
+          </div>
+          <div class="menu_list" id="35573">
+            <div class="menu_head">
+              <div class="test-tag">
+                <i class="statu audit">审核中</i>
+                <i>单选题</i>
+                <i>信息提取</i>
+              </div>
+              <h2>
+                <span>2</span> [单选题]“几个苍蝇咬几口，决不能羁留一匹英勇的奔马。”，这是谁的名言？
+              </h2>
+              <div class="op">
+                <a class="z-handle" onclick='alterOpen(34616)'>
+                  <i class="icon icon-write"></i>
+                </a>
+                <a  class="z-handle"  href="javascript:;" onclick="deleteOpen(34616)">
+                  <i class="icon icon-delete"></i>
+                </a>
+                <a href="javascript:;" id="35573a" class="border_link_f" onclick="removeQ(35573)">+ 添加</a>
+              </div>
+            </div>
+            <div class="menu_body">
+              <dl>
+                <dd>
+                  <p>A:贝多芬</p>
+                </dd>
+                <dd>
+                  <p>B:托尔斯泰</p>
+                </dd>
+                <dd>
+                  <p>C:伏尔泰<s class="result">正确答案</s></p>
+                </dd>
+                <dd>
+                  <p>D:卢梭</p>
+                </dd>
+                <p>
+                  <strong>解析：</strong>空
+                </p>
+              </dl>
+            </div>
+            <div class="hover" style="display: none;">
+              <i class="icon-angle-double-right"></i>
+            </div>
+          </div>
+          <div class="menu_list" id="35574">
+            <div class="menu_head">
+              <div class="test-tag">
+                <i class="statu shared">已共享</i>
+                <i>单选题</i>
+                <i>信息提取</i>
+              </div>
+              <h2>
+                <span>3</span> [单选题]在此英勇的队伍中，作者把首席之位给了：
+              </h2>
+              <div class="op">
+                <a class="z-handle" onclick='alterOpen(34616)'>
+                  <i class="icon icon-write"></i>
+                </a>
+                <a class="z-handle" href="javascript:;" onclick="deleteOpen(34616)">
+                  <i class="icon icon-delete"></i>
+                </a>
+                <a href="javascript:;" id="35574a" class="border_link_f" onclick="removeQ(35574)">+ 添加</a>
+              </div>
+            </div>
+            <div class="menu_body">
+              <dl>
+                <dd>
+                  <p>
+                    A:托尔斯泰</p>
+                </dd>
+                <dd>
+                  <p>B:米开朗琪罗</p>
+                </dd>
+                <dd>
+                  <p>C:达芬奇</p>
+                </dd>
+                <dd>
+                  <p>D:贝多芬<s class="result">正确答案</s>
+                  </p>
+                </dd>
+                <p><strong>解析：</strong>空</p>
+              </dl>
+            </div>
+            <div class="hover">
+              <i class="icon-angle-double-right"></i>
+            </div>
+          </div>
+          <div class="menu_list" id="35571">
+            <div class="menu_head">
+              <p class="test-tag">
+                <i class="statu no-shared">未共享</i>
+                <i>单选题</i>
+                <i>信息提取</i>
+              </p>
+              <h2>
+                <span>17</span> [单选题]下列短语中字词有误的是：
+              </h2>
+              <div class="op">
+                <a class="z-handle" onclick='alterOpen(34616)'>
+                  <i class="icon icon-write"></i>
+                </a>
+                <a class="z-handle" href="javascript:;" onclick="deleteOpen(34616)">
+                  <i class="icon icon-delete"></i>
+                </a>
+                <a href="javascript:;" id="35571a" class="border_link_f" onclick="removeQ(35571)">+ 添加</a>
+              </div>
+            </div>
+            <div class="menu_body">
+              <dl>
+                <dd>
+                  <p>A:翡冷翠 蝤胫<s class="result">正确答案</s></p>
+                </dd>
+                <dd>
+                  <p>B:棺龛 诛戮</p>
+                </dd>
+                <dd>
+                  <p>C:双颊 嚎哭</p>
+                </dd>
+                <dd>
+                  <p>D:一蹶不振 延宕</p>
+                </dd>
+                <p>
+                  <strong>解析：</strong>空
+                </p>
+              </dl>
+            </div>
+            <div class="hover" style="display: none;">
+              <i class="icon-angle-double-right"></i>
+            </div>
+          </div>
+          <div class="menu_list"  id="35570">
+            <div class="menu_head">
+              <div class="test-tag">
+                <i class="statu not-pass">未通过</i>
+                <i>单选题</i>
+                <i>信息提取</i>
+                <div class="not-pass-reason">
+                  <i class="triggle-up"></i>
+                  <i>未通过原因：</i> 题库中已有类似题目
+                </div>
+              </div>
+              <h2>
+                <span>17</span> [单选题]下列短语中字词有误的是：
+              </h2>
+              <div class="op">
+                <a class="z-handle" onclick='alterOpen(35570)'>
+                  <i class="icon icon-write"></i>
+                </a>
+                <a class="z-handle" href="javascript:;" onclick="deleteOpen(35570)">
+                  <i class="icon icon-delete"></i>
+                </a>
+                <a href="javascript:;"  class="border_link_f" onclick="removeQ(35570)">+ 添加</a>
+              </div>
+            </div>
+            <div class="menu_body">
+              <dl>
+                <dd>
+                  <p>A:翡冷翠 蝤胫<s class="result">正确答案</s></p>
+                </dd>
+                <dd>
+                  <p>B:棺龛 诛戮</p>
+                </dd>
+                <dd>
+                  <p>C:双颊 嚎哭</p>
+                </dd>
+                <dd>
+                  <p>D:一蹶不振 延宕</p>
+                </dd>
+                <p>
+                  <strong>解析：</strong>空
+                </p>
+              </dl>
+            </div>
+            <div class="hover" style="display: none;">
+              <i class="icon-angle-double-right"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 提示弹窗 -->
+  <div id="succeedUp">
+    <span>请选择参考维度</span>
+  </div>
+</section>
+<!-- 删除弹窗 -->
+<div class="delete_win" id="deleteYes">
+  <s onclick="deleteClose()">×</s>
+  <p>您真的要删除该题目吗？</p>
+  <a href="http://cs.xueya.test.basicedu.chaoxing.com/front/question/to-list?resId=464#" class="cancel"
+     onclick="deleteClose()">取消</a>
+</div>
+<!-- 提示保存弹窗 -->
+<div class="delete_win" id="selectYes">
+  <s onclick="deleteClose()">×</s>
+  <p>请先保存题目!</p>
+  <a href="http://cs.xueya.test.basicedu.chaoxing.com/front/question/to-list?resId=464#" class="submit"
+     style="margin-right:140px" onclick="submitpaper()">确定</a>
+
+</div>
+<!-- 新增弹窗 -->
+<div class="new_win">
+
+  <s onclick="newClose()">×</s>
+  <dl>
+    <dt>题型</dt>
+    <dd>
+      <div class="radio_span">
+        <div class="r-container">
+          <input type="radio" id="radio11" checked="checked" name="radio1">
+          <label for="radio11" class="r-label"></label>
+        </div>
+        <strong>单选题</strong>
+      </div>
+    </dd>
+  </dl>
+  <dl>
+    <dt>题目</dt>
+    <dd>
+      <textarea class="textarea_contact" rows="6" id="content" placeholder='在此输入题目...' onfocus="placeholder=''" onblur="if(this.value ==''){placeholder='在此输入题目...'}"></textarea>
+    </dd>
+  </dl>
+  <dl>
+    <dt></dt>
+    <dd>
+        <div id="uploadImg">+</div>（添加图片）
+    </dd>
+  </dl>
+  <dl>
+    <dt class="selectNo">选项A</dt>
+    <dd>
+      <!-- 单选题：single，多选题：multiple，所有answer都需添加  -->
+      <div class="answer single" id="answer1">
+        <s id="s1">
+          <i class="icon-check"></i>
+        </s>
+        <input type="text" name="answerKey1" id="answerKey1" placeholder='请输入选项内容' onblur="if(this.value==''){this.placeholder='请输入选项内容';}" onfocus="placeholder=''">
+        <span class="icon-delete"></span>
+      </div>
+    </dd>
+  </dl>
+  <dl>
+    <dt class="selectNo">选项B</dt>
+    <dd>
+      <div class="answer single" id="answer2">
+        <s id="s2">
+          <i class="icon-check"></i>
+        </s>
+        <input type="text" name="answerKey2" id="answerKey2" placeholder='请输入选项内容' onblur="if(this.value==''){this.placeholder='请输入选项内容';}" onfocus="placeholder=''">
+        <span class="icon-delete"></span>
+      </div>
+    </dd>
+  </dl>
+  <dl>
+    <dt class="selectNo">选项C</dt>
+    <dd>
+      <div class="answer single" id="answer3">
+        <s id="s3">
+          <i class="icon-check"></i>
+        </s>
+        <input type="text" name="answerKey3" id="answerKey3" placeholder='请输入选项内容' onblur="if(this.value==''){this.placeholder='请输入选项内容';}" onfocus="placeholder=''">
+        <span class="icon-delete"></span>
+      </div>
+    </dd>
+  </dl>
+  <dl>
+    <dt class="selectNo">选项D</dt>
+    <dd>
+      <div class="answer single" id="answer4">
+        <s id="s4">
+          <i class="icon-check"></i>
+        </s>
+        <input type="text" name="answerKey4" id="answerKey4" placeholder='请输入选项内容' onblur="if(this.value==''){this.placeholder='请输入选项内容';}" onfocus="placeholder=''">
+        <span class="icon-delete"></span>
+      </div>
+    </dd>
+  </dl>
+  <div id="addSelect">+ 添加选项</div>
+  <dl>
+    <dt>考察维度</dt>
+    <dd>
+      <select id="dimensionId">
+
+        <option value="1">字词掌握</option>
+
+        <option value="2">信息提取</option>
+
+        <option value="3">归纳推理</option>
+
+        <option value="4">欣赏共情</option>
+
+        <option value="5">反思评价</option>
+
+        <option value="6">想象拓展</option>
+
+      </select>
+    </dd>
+  </dl>
+  <dl>
+    <dt>解析</dt>
+    <dd>
+      <textarea class="textarea_editor" rows="6" id="analysis"  onfocus="placeholder=''" onblur="if(this.value==''){placeholder='在此输入解析...'};" placeholder="在此输入解析..."></textarea>
+    </dd>
+  </dl>
+  <dl class="r-container">
+    <dt></dt>
+    <dd>
+      <input id="shareRadio" checked type="radio">
+      <label class="r-label" for="shareRadio"></label>
+      将题目共享到平台（审核通过后，全网教师都可以使用该题目但题目不能再编辑和删除）
+    </dd>
+  </dl>
+  <a href="http://cs.xueya.test.basicedu.chaoxing.com/front/question/to-list?resId=464#" class="cancel"
+     onclick="newClose()">取消</a>
+</div>
+<!-- 遮罩层 -->
+<div class="cover"></div>
+<!-- 页面尾部 -->
+<footer>
+  <p>COPYRIGHT © basicedu.chaoxing.com ALL RIGHTS RESERVED. | 京ICP备 13046642号-2</p>
+</footer>
+<script src="js/calendar.js"></script>
+<script src="js/plupload.full.min.js"></script>
+<script src="js/main.js"></script>
+<script src="js/edit-question.js"></script>
+<script>
+  $(function () {
+
+//    dateChoose();
+    noPassReason();
+    shareRadio();
+    uploadImg();
+    addSelect();
+    delSelect();
+  });
+//  未通过的hover显示原因
+  function noPassReason() {
+    $(".not-pass").on("mouseenter",function () {
+      $(this).parent().find(".not-pass-reason").fadeIn(300);
+    }).on("mouseleave",function () {
+      $(this).parent().find(".not-pass-reason").fadeOut(300);
+    })
+  }
+//  共享选项的点击事件
+  function shareRadio() {
+    $("#shareRadio").on("click",function () {
+      var checkStatu=$(this).attr("checked");
+      $(this).attr("checked",!checkStatu);
+    })
+  }
+//  添加选项
+  function addSelect() {
+    $("#addSelect").on("click",function () {
+      var selectLen=$(".selectNo").length;
+      var html=$(this).prev().clone(true);
+      var NO= String.fromCharCode(64 + parseInt(selectLen+1));
+      html.find(".selectNo").html("选项"+NO);
+      $(this).before(html);
+    })
+  }
+//  删除选项
+   function  delSelect() {
+     $(document).on("click",".answer .icon-delete",function () {
+       $(this).parents("dl").remove();
+       $(".selectNo").each(function (index,value) {
+         var indexNo=String.fromCharCode(64 + parseInt(index+1));
+         $(this).html("选项"+indexNo);
+       })
+     })
+   }
+//  图片上传
+  function uploadImg() {+
+    //实例化一个plupload上传对象
+    var uploader = new plupload.Uploader({
+      browse_button : 'uploadImg', //触发文件选择对话框的按钮，为那个元素id
+      url : 'upload.php', //服务器端的上传页面地址
+      flash_swf_url : 'js/Moxie.swf', //swf文件，当需要使用swf方式进行上传时需要配置该参数
+      silverlight_xap_url : 'js/Moxie.xap' //silverlight文件，当需要使用silverlight方式进行上传时需要配置该参数
+    });
+
+    //在实例对象上调用init()方法进行初始化
+    uploader.init();
+
+    //绑定各种事件，并在事件监听函数中做你想做的事
+    uploader.bind('FilesAdded',function(uploader,files){
+      function previewImage(file, callback) {//file为plupload事件监听函数参数中的file对象,callback为预览图片准备完成的回调函数
+        if (!file || !/image\//.test(file.type)) return; //确保文件是图片
+        if (file.type == 'image/gif') {//gif使用FileReader进行预览,因为mOxie.Image只支持jpg和png
+          var fr = new mOxie.FileReader();
+          fr.onload = function () {
+            callback(fr.result);
+            fr.destroy();
+            fr = null;
+          };
+          fr.readAsDataURL(file.getSource());
+        } else {
+          var preloader = new mOxie.Image();
+          preloader.onload = function () {
+            preloader.downsize(300, 300);//先压缩一下要预览的图片,宽300，高300
+            var imgsrc = preloader.type == 'image/jpeg' ? preloader.getAsDataURL('image/jpeg', 80) : preloader.getAsDataURL(); //得到图片src,实质为一个base64编码的数据
+            callback && callback(imgsrc); //callback传入的参数为预览图片的url
+            preloader.destroy();
+            preloader = null;
+          };
+          preloader.load(file.getSource());
+        }
+      }
+      // 预览
+      if (files.length > 0) {
+          previewImage(files[0], function (imgsrc) {
+            var html = '<img src="'+ imgsrc + '" >';
+            $("#uploadImg").html(html);
+          })
+      }
+    });
+  }
+</script>
+</body>
+</html>

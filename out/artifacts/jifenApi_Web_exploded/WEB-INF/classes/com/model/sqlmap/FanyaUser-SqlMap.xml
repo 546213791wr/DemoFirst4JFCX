@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+
+    <resultMap id="RM.FanyaUser" class="com.model.FanyaUser">
+        <result property="id" column="id"/>
+        <result property="uid" column="uid"/>
+        <result property="fid" column="fid"/>
+        <result property="perfectStatus" column="perfect_status"/>
+        <result property="userTypeId" column="user_type_id"/>
+        <result property="userTypeAuthFlag" column="user_type_auth_flag"/>
+        <result property="code" column="code"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createUserId" column="create_user_id"/>
+        <result property="modifyTime" column="modify_time"/>
+        <result property="modifyUserId" column="modify_user_id"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="FanyaUser.columns">
+	    <![CDATA[
+        id, uid, fid, perfect_status, user_type_id, user_type_auth_flag, status, create_time, create_user_id, modify_time, modify_user_id, code 
+	    ]]>
+	</sql>
+	
+    <insert id="FanyaUser.insert" >
+    <![CDATA[
+        INSERT INTO xy_fanya_user (
+        	uid, 
+        	fid, 
+        	perfect_status, 
+        	user_type_id, 
+        	user_type_auth_flag, 
+        	code, 
+        	status, 
+        	create_user_id, 
+        	modify_user_id 
+        ) VALUES (
+        	#uid#, 
+        	#fid#, 
+        	#perfectStatus#, 
+        	#userTypeId#, 
+        	#userTypeAuthFlag#, 
+        	#code#, 
+        	#status#, 
+        	#createUserId#, 
+        	#modifyUserId# 
+        )
+    ]]>
+    <!--
+    mysql:		type="post" SELECT  select last_insert_id()
+    sqlserver:	type="post" SELECT  @@identity  AS  ID
+    oracle:		type="pre" 	SELECT  sequenceName.nextval AS ID FROM DUAL
+    DB2:		type="pre"	values nextval for sequenceName
+    -->
+        <selectKey resultClass="java.lang.Integer" type="post" keyProperty="id" >
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="FanyaUser.update" >
+    <![CDATA[
+        UPDATE xy_fanya_user SET
+	        uid = #uid#,
+	        fid = #fid#,
+	        perfect_status = #perfectStatus#,
+	        user_type_id = #userTypeId#,
+	        user_type_auth_flag = #userTypeAuthFlag#,
+	        code = #code#,
+	        status = #status#,
+	        create_time = #createTime#,
+	        create_user_id = #createUserId#,
+	        modify_time = #modifyTime#,
+	        modify_user_id = #modifyUserId#
+        WHERE 
+	        id = #id# 
+    ]]>
+    </update>
+
+    <delete id="FanyaUser.delete">
+    <![CDATA[
+        DELETE FROM xy_fanya_user WHERE
+        id = #id# 
+    ]]>
+    </delete>
+    
+    <select id="FanyaUser.getById" resultMap="RM.FanyaUser">
+	    SELECT <include refid="FanyaUser.columns"/>
+	    <![CDATA[
+	        FROM xy_fanya_user 
+	        WHERE 
+		        id = #id# 
+	    ]]>
+    </select>
+
+	<!-- 通过fanyaUserId找到fanyaUser对象 -->
+	<select id="FanyaUser.getByFanyaUserId" resultMap="RM.FanyaUser">
+		SELECT <include refid="FanyaUser.columns"/>
+		<![CDATA[
+	        FROM xy_fanya_user u
+	        WHERE
+		        uid = #fanyaUserId# limit 1
+	    ]]>
+	</select>
+
+    
+	<sql id="FanyaUser.findPage.where">
+	    <dynamic prepend="WHERE">
+		       <isNotEmpty prepend="AND" property="query.id">
+		             id = #query.id#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="query.uid">
+		             uid = #query.uid#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="query.fid">
+		             fid = #query.fid#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="query.perfectStatus">
+		             perfect_status = #query.perfectStatus#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="query.userTypeId">
+		             user_type_id = #query.userTypeId#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="query.userTypeAuthFlag">
+		             user_type_auth_flag = #query.userTypeAuthFlag#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="query.status">
+		             status = #query.status#
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="query.createTime">
+		             create_time = #query.createTime#
+		       </isNotEmpty>
+
+	    </dynamic>	
+	</sql>
+
+	<select id="FanyaUser.list" resultMap="RM.FanyaUser">
+	    SELECT <include refid="FanyaUser.columns"/> FROM xy_fanya_user
+	    <include refid="FanyaUser.findPage.where"/>
+    </select>
+	 
+    <select id="FanyaUser.findPage.count" resultClass="java.lang.Integer">
+        SELECT count(*) FROM xy_fanya_user <include refid="FanyaUser.findPage.where"/>
+    </select>
+
+	<select id="FanyaUser.nullFid.list" resultMap="RM.FanyaUser">
+		SELECT <include refid="FanyaUser.columns"/> FROM xy_fanya_user
+		WHERE fid IS NULL
+		<isNotEmpty property="sortString">
+			$sortString$
+		</isNotEmpty>
+		limit #startNumber#, #pageSize#
+	</select>
+
+	<select id="FanyaUser.nullFid.count" resultClass="java.lang.Integer">
+		SELECT count(*) FROM xy_fanya_user WHERE fid IS NULL
+	</select>
+
+	<select id="FanyaUser.nullCode.list" resultMap="RM.FanyaUser">
+		SELECT <include refid="FanyaUser.columns"/> FROM xy_fanya_user
+		WHERE code IS NULL
+		<isNotEmpty property="sortString">
+			$sortString$
+		</isNotEmpty>
+		limit #startNumber#, #pageSize#
+	</select>
+
+	<select id="FanyaUser.nullCode.count" resultClass="java.lang.Integer">
+		SELECT count(*) FROM xy_fanya_user WHERE code IS NULL
+	</select>
+
+    <select id="FanyaUser.findPage" resultMap="RM.FanyaUser">
+    	SELECT <include refid="FanyaUser.columns"/> FROM xy_fanya_user 
+		<include refid="FanyaUser.findPage.where"/>
+		<isNotEmpty property="sortString">
+			$sortString$
+		</isNotEmpty>
+		limit #startNumber#, #pageSize#
+    </select>
+
+	<resultMap id="RM.API.UserList" class="java.util.HashMap">
+		<result property="fid" column="fid"/>
+		<result property="uid" column="uid"/>
+		<result property="userName" column="real_name"/>
+		<result property="roleType" column="user_type_id"/>
+		<result property="ageGroup" column="age_group_id"/>
+		<result property="className" column="class_name"/>
+		<result property="classId" column="class_id"/>
+		<result property="gradeName" column="grade_name"/>
+		<result property="gradeId" column="grade_id"/>
+		<result property="loginName" column="login_name"/>
+	</resultMap>
+
+	<select id="FanyaUser.getUserList4APi" resultMap="RM.API.UserList">
+		SELECT
+		a.fid,
+		a.uid,
+		b.real_name,
+		a.user_type_id,
+		b.age_group_id,
+		c.name AS class_name,
+		b.class_id,
+		d.name AS grade_name,
+		c.grade_id,
+		b.login_name
+		FROM
+		(select * from xy_fanya_user
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="fid">
+				fid = #fid#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="uid">
+				uid = #uid#
+			</isNotEmpty>
+		</dynamic>
+		) a
+		JOIN xy_fanya_user_detail b ON a.uid = b.uid AND a. STATUS = 1
+		JOIN xy_class c ON c.id = b.class_id AND c. STATUS = 1 AND c.grade_id IS NOT NULL
+		JOIN xy_grade d ON c.grade_id = d.id AND d. STATUS = 1
+	</select>
+
+	<select id="FanyaUser.getUserListByFidGrdeIdClassId" resultMap="RM.API.UserList">
+		SELECT
+		a.fid,
+		c.uid,
+		c.real_name,
+		d.user_type_id,
+		c.age_group_id,
+		b.id class_id,
+		b.name class_name,
+		a.id grade_id,
+		a.name grade_name,
+		c.login_name
+		FROM
+		(
+		SELECT
+		*
+		FROM
+		xy_grade
+		WHERE
+		STATUS = '1'
+		AND fid = #fid#
+		AND id = #gradeId#
+		) a
+		JOIN xy_class b ON b.grade_id = a.id AND b. STATUS = '1' AND b.id = #classId#
+		JOIN xy_fanya_user_detail c ON c.class_id = b.id
+		JOIN xy_fanya_user d ON d.uid = c.uid AND d. STATUS = '1' AND d.user_type_id = #roleType#;
+	</select>
+
+	<select id="FanyaUser.nullLoginName.list" resultMap="RM.FanyaUser">
+		SELECT
+		b.*
+		FROM
+		xy_fanya_user_detail a
+		JOIN xy_fanya_user b ON a.uid = b.uid
+		AND a.login_name IS NULL
+		<isNotEmpty property="sortString">
+			$sortString$
+		</isNotEmpty>
+		limit #startNumber#, #pageSize#
+	</select>
+
+	<select id="FanyaUser.nullLoginName.count" resultClass="java.lang.Integer">
+		SELECT
+		count(*)
+		FROM
+		xy_fanya_user_detail a
+		JOIN xy_fanya_user b ON a.uid = b.uid
+		AND a.login_name IS NULL
+	</select>
+
+</sqlMap>
+

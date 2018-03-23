@@ -1,0 +1,111 @@
+校园阅读系统版本说明：
+
+---------------------
+20170929日版本：
+1、登录选择机构界面优化更新。
+2、年级和班级显示优化。
+3、修改学生通过测评后的阅读字数bug。
+4、移动端增加banner图，链接专题。
+5、PC端首页新增banner图，链接专题。
+6、新增后台操作用户机构数据同步。
+7、纠正教师端 功能模块-测评。
+8、移动端教师角色，选择班级的小图标添加。
+9、纠正教师任务查看学生完成情况的样式问题。
+
+
+11、题库私有。题目编辑新开页面。
+12、教师任务私有。
+13、移动端发布任务 - 只默认选择班级。
+14、同步用户数据默认教师年级，教师组班级移除。
+---------------------
+
+20171017日版本
+1、查看任务完成情况，完成时间修改。
+2、新增2个接口 原根据fid+gradeId+classId查询学生返回学生列表中。
+3、修改任务分页bug。
+4、添加任务私有化。
+5、教师题库私有化，任务中，共同管理行政班级的老师，不能查看其它老师的题目。
+6、右侧栏教师角色显示bug调整。
+7、1385 机构模块配置初高中及老师学生版本。
+8、教师页面头部问题调整。
+9、教师发布任务后刷新问题调整。
+
+-----------------------
+1、添加模块年级类型（管理模块下是否出现年级分类筛选） 添加plt_modules表grade_type字段  修改front下 bookController、
+model下modules、sqlMap下modules-sql，front目录下 book-list-restypes.jsp和book-list-booktypes.jsp页面
+
+
+
+
+-----------------------
+20171102日版本
+1、将资源主体切换至专题。
+2、影响模块（首页推荐模块，
+    图书详情模块，
+    图书详情的推荐模块，
+    图书在线阅读，
+    谁通过了测评，
+    我的读后感，
+    京东在线购书
+    ）等阅读相关模块。
+3、首页推荐添加年龄段，角色的联合控制。推荐的跳转更多调整。
+4、移动端搜索问题。 首页搜索和二级模块的搜索。
+
+
+可能出现的问题：
+1、部分没有专题ID的图书，读后感丢失。
+2、图书阅读模块资源可能会有变更。
+
+
+
+// 升级失败问题：
+1、空专题的所有数据，不需要有在线阅读。
+2、
+
+
+-----------------------
+
+
+2017-12-21 版本日志：
+1、后台权限控制调整。 访问非配置请求拦截。 t_permission 表记录更新。 update t_permission set url = CONCAT('/admin',url) where url is not null
+
+
+
+2018-1-15 版本日志：
+1、提供给前端没有头部的链接地址。 代码： m/mission/StudentMissionController   . 前端：  m/mission/m-student-missino-list-nohead.jsp
+2、区域平台架构：
+{
+新增区域表plt_city，学院表plt_open_aca。学院-年级关联表 xy_aca_grade，机构区域表plt_org_city。
+
+修改机构表(新增unique字段)，用户详细表(新增一个aid字段)
+
+-- 区域表直接新增。
+
+
+-- 插入到学院
+insert into plt_open_aca(aca_name,open_time,status,fid)  select org_name,open_time,status,fid from plt_open_org
+
+-- 在xy_fanya_user_detail表中添加对应的aid数据
+UPDATE xy_fanya_user_detail x set aid=(SELECT id from plt_open_aca  WHERE x.fid=fid) where x.fid in (SELECT y.fid from (select DISTINCT fid from plt_open_aca) y)
+
+-- 添加学院年级表数据
+
+INSERT into xy_aca_grade(aid,grade_id,`status`)  (SELECT p.id,x.id,x.`status` from xy_grade x join plt_open_aca p on p.fid=x.fid and x.fid is not null )
+
+-- 完结
+}
+
+
+
+
+
+2018-1-25 版本日志：
+1、一级模块新增pc和移动端的显示字段。 那些模块可以分别在2端同时使用。  之前配置的仅在移动端使用的模块需要单独罗列。模块默认配置2端均可用。
+2、后端 测评资源，题目附件的路径切换问题。需要挂接/opt静态资源目录。 然后后端测评和题目附件均上传到这个目录下。
+3、2.1版本图片上传问题。  首页排名的轮播，鼠标悬浮的时候会出现卡顿。 首页菜单栏需要固定到顶部。
+4、报告页面- 个人，班级，年级，学校 （学院报告逻辑暂时不管。区域报告的时候一起来做）。
+5、活动管理 ， 抽取机构活动的对应表数据。
+6、统计图书排行榜哪里，需要将测评的专题ID一并拿出来作为记录缓存（海波梳理结构~）
+7、班级人数为0 的情况下，不允许查看班级报告。
+
+

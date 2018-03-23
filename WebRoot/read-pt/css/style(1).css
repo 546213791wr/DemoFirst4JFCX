@@ -1,0 +1,254 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('../fonts/icomoon.eot?w7qywm');
+  src:  url('../fonts/icomoon.eot?w7qywm#iefix') format('embedded-opentype'),
+    url('../fonts/icomoon.ttf?w7qywm') format('truetype'),
+    url('../fonts/icomoon.woff?w7qywm') format('woff'),
+    url('../fonts/icomoon.svg?w7qywm#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-space:before {
+  content: "\e94c";
+}
+.icon-circle-right:before {
+  content: "\e943";
+}
+.icon-select:before {
+  content: "\e946";
+}
+.icon-class-number:before {
+  content: "\e947";
+}
+.icon-view:before {
+  content: "\e948";
+}
+.icon-arrow-down:before {
+  content: "\e949";
+}
+.icon-arrow-top:before {
+  content: "\e94a";
+}
+.icon-daren:before {
+  content: "\e90a";
+}
+.icon-print:before {
+  content: "\e93c";
+}
+.icon-export:before {
+  content: "\e93d";
+}
+.icon-behavior:before {
+  content: "\e93e";
+}
+.icon-ability:before {
+  content: "\e93f";
+}
+.icon-range:before {
+  content: "\e940";
+}
+.icon-task-linear:before {
+  content: "\e941";
+}
+.icon-book-num:before {
+  content: "\e942";
+}
+.icon-like:before {
+  content: "\e944";
+}
+.icon-read-num:before {
+  content: "\e945";
+}
+.icon-app:before {
+  content: "\e901";
+}
+.icon-class:before {
+  content: "\e902";
+}
+.icon-report:before {
+  content: "\e903";
+}
+.icon-read-report:before {
+  content: "\e904";
+}
+.icon-qr-code:before {
+  content: "\e909";
+}
+.icon-feedback:before {
+  content: "\e90d";
+}
+.icon-tencent:before {
+  content: "\e90e";
+}
+.icon-over:before {
+  content: "\e910";
+}
+.icon-under-way:before {
+  content: "\e912";
+}
+.icon-course:before {
+  content: "\e913";
+}
+.icon-task:before {
+  content: "\e917";
+}
+.icon-delete:before {
+  content: "\e918";
+}
+.icon-set:before {
+  content: "\e91a";
+}
+.icon-book:before {
+  content: "\e91b";
+}
+.icon-shelf:before {
+  content: "\e91d";
+}
+.icon-photo:before {
+  content: "\e92d";
+}
+.icon-exit:before {
+  content: "\e92e";
+}
+.icon-ask:before {
+  content: "\e92f";
+}
+.icon-explain:before {
+  content: "\e930";
+}
+.icon-news:before {
+  content: "\e931";
+}
+.icon-write:before {
+  content: "\e932";
+}
+.icon-stu-number:before {
+  content: "\e933";
+}
+.icon-praise:before {
+  content: "\e934";
+}
+.icon-buy-book:before {
+  content: "\e93a";
+}
+.icon-recently-read:before {
+  content: "\e93b";
+}
+.icon-time:before {
+  content: "\e90f";
+}
+.icon-angle-double-right:before {
+  content: "\e900";
+}
+.icon-check:before {
+  content: "\e905";
+}
+.icon-chevron-down:before {
+  content: "\e906";
+}
+.icon-chevron-right:before {
+  content: "\e907";
+}
+.icon-close:before {
+  content: "\e908";
+}
+.icon-edit:before {
+  content: "\e90b";
+}
+.icon-exclamation:before {
+  content: "\e90c";
+}
+.icon-heart:before {
+  content: "\e911";
+}
+.icon-notice:before {
+  content: "\e914";
+}
+.icon-organization:before {
+  content: "\e915";
+}
+.icon-password:before {
+  content: "\e916";
+}
+.icon-plus:before {
+  content: "\e919";
+}
+.icon-search:before {
+  content: "\e91c";
+}
+.icon-sign-check:before {
+  content: "\e91e";
+}
+.icon-sign:before {
+  content: "\e91f";
+}
+.icon-space1:before {
+  content: "\e920";
+}
+.icon-star:before {
+  content: "\e921";
+}
+.icon-thumbs-up:before {
+  content: "\e922";
+}
+.icon-upload:before {
+  content: "\e923";
+}
+.icon-user:before {
+  content: "\e924";
+}
+.icon-empty-browse:before {
+  content: "\e925";
+}
+.icon-empty-convert:before {
+  content: "\e926";
+}
+.icon-empty-course:before {
+  content: "\e927";
+}
+.icon-empty-read:before {
+  content: "\e928";
+}
+.icon-empty-search:before {
+  content: "\e929";
+}
+.icon-empty-task:before {
+  content: "\e92a";
+}
+.icon-empty-test:before {
+  content: "\e92b";
+}
+.icon-empty-thoughts:before {
+  content: "\e92c";
+}
+.icon-hide:before {
+  content: "\e935";
+}
+.icon-show:before {
+  content: "\e936";
+}
+.icon-wrong:before {
+  content: "\e937";
+}
+.icon-question:before {
+  content: "\e938";
+}
+.icon-wechat:before {
+  content: "\e939";
+}

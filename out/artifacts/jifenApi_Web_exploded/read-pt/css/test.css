@@ -1,0 +1,219 @@
+/*create by zxh 用于测评页面修改部分的样式*/
+#submitPaper{
+  float: right;
+  border: solid 1px #56be47;
+  border-radius: 32px;
+  font-size: 0.875rem;
+  color: #fff;
+  line-height: 2rem;
+  background: #56be47;
+  text-align: center;
+  padding: 0 17px 0 0;
+  margin: 8px 10px 0 0;
+}
+/*测试题tag的样式*/
+.test-tag{
+  padding: 0 15px;
+  height: 43px;
+  line-height: 43px;
+  background-color: #f8f8f8;
+}
+.test-tag>i{
+  font-size: 14px;
+  color: rgb(102, 102, 102);
+  margin-right: 20px;
+  font-style: normal;
+}
+.test-tag .statu{
+  display: inline-block;
+  vertical-align: middle;
+  height: 24px;
+  padding: 0 6px;
+  margin-right: 10px;
+  line-height: 24px;
+  border-radius: 20px;
+}
+.test-tag .audit{
+  color: rgb(63, 167, 250);
+  background-color: #e6f0f8;
+}
+.test-tag .shared{
+  color: rgb(86, 190, 71);
+  background-color: #ddeeda;
+}
+.test-tag .no-shared{
+  background-color: #f9edda;
+  color: rgb(251, 172, 69);
+}
+.test-tag .not-pass{
+  position: relative;
+  color: #fff;
+  /*padding-right: 20px;*/
+  background-color: #f1591d;
+}
+/*.test-tag .not-pass:before{*/
+  /*position: absolute;*/
+  /*top:6px;*/
+  /*right:1px;*/
+  /*content:'';*/
+  /*border-top:6px solid transparent;*/
+  /*border-right:6px solid transparent;*/
+  /*border-bottom:6px solid transparent;*/
+  /*border-left:6px solid #fff ;*/
+  /*border-radius: 3px;*/
+/*}*/
+/*.test-tag .not-pass:after{*/
+  /*position: absolute;*/
+  /*top:6px;*/
+  /*right:3px;*/
+  /*content:'';*/
+  /*border-top:6px solid transparent;*/
+  /*border-right:6px solid transparent;*/
+  /*border-bottom:6px solid transparent;*/
+  /*border-left:6px solid #f1591d ;*/
+/*}*/
+.test-tag .not-pass:hover{
+  background-color: #ff7e4b;
+}
+.test-tag .not-pass:hover:after{
+  border-left:8px solid #ff7e4b ;
+}
+/*未通过的原因*/
+.not-pass-reason{
+  position: absolute;
+  display: none;
+  color: #1c1c1c;
+  top:40px;
+  left: 15px;
+  padding: 8px;
+  line-height: 1.5;
+  width: 257px;
+  background-color: #fff;
+  box-shadow: 0px 0px 9.5px 0.5px rgba(210, 210, 210, 0.4);
+  z-index: 100;
+}
+.not-pass-reason i{
+  color: #f1591d;
+  font-style: normal;
+}
+.not-pass-reason .triggle-up{
+  position: absolute;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  left: 20px;
+  top:-6px;
+}
+.not-pass-reason .triggle-up:before{
+  position: absolute;
+  display: inline-block;
+  content: '';
+  left: 0;
+  top:0;
+  border-right:6px solid transparent;
+  border-bottom:6px solid rgba(210, 210, 210, .5);
+  border-left:6px solid transparent ;
+  z-index: 1;
+}
+.not-pass-reason .triggle-up:after{
+  position: absolute;
+  display: inline-block;
+  content: '';
+  left: 0;
+  top:1px;
+  border-right:6px solid transparent;
+  border-bottom:6px solid #fff;
+  border-left:6px solid transparent;
+  z-index: 2;
+}
+
+/*新增题目弹框的样式*/
+#uploadImg{
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  font-size: 30px;
+  text-align: center;
+  color: #ddd;
+  border:1px solid #ddd;
+  vertical-align: middle;
+  background-color: #fafafa;
+  cursor: pointer;
+}
+#uploadImg>img{
+  width: 100%;
+  height: 100%;
+}
+.alter_win > dl > dd textarea.textarea_editor, .new_win > dl > dd textarea.textarea_editor{
+  height: 55px;
+  margin-bottom: 0;
+}
+.alter_win > dl > dd textarea.textarea_contact, .new_win > dl > dd textarea.textarea_contact{
+  height: 55px;
+  margin-bottom: 0;
+}
+#shareRadio+.r-label{
+  margin:5px 5px 0 5px;
+  cursor: pointer;
+}
+/*添加选项按钮的样式*/
+#addSelect{
+ width: 109px;
+ height: 30px;
+ margin-left: 90px;
+ margin-bottom: 20px;
+ line-height: 30px;
+ color: rgb(63, 181, 45);
+ border:1px solid rgb(63, 181, 45);
+ background-color: #fff;
+ border-radius: 20px;
+ cursor: pointer;
+}
+.new_win{
+  width: 690px;
+  overflow-y: scroll;
+}
+.answer{
+  position: relative;
+}
+.answer .icon-delete{
+  position: absolute;
+  right: -20px;
+  top:10px;
+  color: #ccc;
+  cursor: pointer;
+}
+.task_nav .default_nav .editor .nav_l .scroll .menu_list .menu_head .op a:first-of-type,
+.task_nav .default_nav .editor .nav_r .scroll .menu_list .menu_head .op a:first-of-type{
+  border:none;
+}
+.answer .icon-delete:hover{
+  color: #fd7059;
+}
+.op .icon{
+  color: rgb(63, 181, 45);
+  font-weight: bold;
+  cursor: pointer;
+}
+/*已选题目为空的情况*/
+.z-empty{
+  text-align: center;
+}
+.z-empty img{
+  display: inline-block;
+}
+.z-empty dl{
+  margin-top: 20px;
+  text-align: left;
+  font-size: 14px;
+  color: rgb(102, 102, 102);
+  line-height: 1.673;
+}
+/*弹框层级设置*/
+.cover{
+    z-index: 98;
+}
+.alter_win, .delete_win, .new_win{
+  z-index: 99;
+}

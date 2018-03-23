@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+
+    <resultMap id="RM.Order" class="com.model.Order">
+        <result property="id"                 column="id"/>
+        <result property="productId"          column="product_id"/>
+        <result property="totalPrice"         column="total_price"/>
+        <result property="totalExchagnePrice" column="total_exchagne_price"/>
+        <result property="createUserId"       column="create_user_id"/>
+        <result property="createUserName"     column="create_user_name"/>
+        <result property="orderNo"            column="order_no"/>
+        <result property="cityCode"           column="city_code"/>
+        <result property="address"            column="address"/>
+        <result property="contactName"        column="contact_name"/>
+        <result property="contactPhone"       column="contact_phone"/>
+        <result property="expressNumber"      column="express_number"/>
+        <result property="createTime"         column="orders"/>
+        <result property="updateTime"         column="create_time"/>
+        <result property="status"             column="status"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="Order.columns">
+	    <![CDATA[
+        id, product_id, total_price, total_exchagne_price, create_user_id, create_user_name, order_no, city_code, address, contact_name, contact_phone, express_number, orders, create_time, status
+	    ]]>
+	</sql>
+	
+    <insert id="Order.insert" >
+    <![CDATA[
+        INSERT INTO plt_order (
+        	id,
+            product_id,
+            total_price,
+            total_exchagne_price,
+            create_user_id,
+            create_user_name,
+            order_no,
+            city_code,
+            address,
+            contact_name,
+            contact_phone,
+            express_number,
+            orders,
+            create_time,
+            status
+        ) VALUES (
+        	#id#,
+            #productId#,
+            #totalPrice#,
+            #totalExchagnePrice#,
+            #createUserId#,
+            #createUserName#,
+            #orderNo#,
+            #cityCode#,
+            #address#,
+            #contactName#,
+            #contactPhone#,
+            #expressNumber#,
+            #createTime#,
+            #updateTime#,
+            #status#
+        )
+    ]]>
+    <!--
+    mysql:		type="post" SELECT  select last_insert_id()
+    sqlserver:	type="post" SELECT  @@identity  AS  ID
+    oracle:		type="pre" 	SELECT  sequenceName.nextval AS ID FROM DUAL
+    DB2:		type="pre"	values nextval for sequenceName
+    -->
+        <selectKey resultClass="java.lang.Integer" type="post" keyProperty="id" >
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="Order.update" >
+    <![CDATA[
+        UPDATE plt_order SET
+            product_id           = 	#productId#,
+            total_price          = 	#totalPrice#,
+            total_exchagne_price = 	#totalExchagnePrice#,
+            create_user_id       = 	#createUserId#,
+            create_user_name     = 	#createUserName#,
+            order_no             = 	#orderNo#,
+            city_code            = 	#cityCode#,
+            address              = 	#address#,
+            contact_name         = 	#contactName#,
+            contact_phone        = 	#contactPhone#,
+            express_number       = 	#expressNumber#,
+            orders               = 	#createTime#,
+            create_time          = 	#updateTime#,
+            status               =  #status#
+        WHERE
+	        id = #id# 
+    ]]>
+    </update>
+
+    <delete id="Order.delete">
+    <![CDATA[
+        DELETE FROM plt_order WHERE id = #id#
+    ]]>
+    </delete>
+    
+    <select id="Order.getById" resultMap="RM.Order">
+	    SELECT <include refid="Order.columns"/>
+	    <![CDATA[
+	        FROM plt_order 
+	        WHERE 
+		        id = #id# 
+	    ]]>
+    </select>
+
+</sqlMap>
+

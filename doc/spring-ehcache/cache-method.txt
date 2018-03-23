@@ -1,0 +1,474 @@
+// 原网址：
+http://www.codingpedia.org/ama/spring-caching-with-ehcache/
+
+
+  @Cacheable  缓存
+
+  @CacheEvict  删除缓存
+
+
+---------
+2. Spring Cache abstraction
+
+Since version 3.1, Spring Framework provides support for transparently adding caching into an existing Spring application. Similar to the transaction support, the caching abstraction allows consistent use of various caching solutions with minimal impact on the code.
+
+2.1. Maven dependency
+
+First of all, to be able to use Ehache make sure you have the corresponding .jar in your application’s classpath. To build Podcastpedia I use maven, so I added the following dependency to the pom.xml file:
+
+
+
+    <dependency>
+    	<groupId>net.sf.ehcache</groupId>
+    	<artifactId>ehcache</artifactId>
+    	<version>2.7.4</version>
+    </dependency>
+
+
+2.2. Configuring the cache storage
+
+Out of the box, the cache abstraction provides integration with two storages – one on top of the JDK ConcurrentMap and one for ehcache library. As mentioned in the beginning of the post, for Podcastpedia I use the latter. To configure it, I need to simply declare an appropriate CacheManager in the Spring application context.
+
+The EhCache implementation is located under org.springframework.cache.ehcache package:
+
+
+
+    <!-- *******************************
+    	 ***** CACHE CONFIGURATION *****
+    	 ******************************* -->
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+    	<property name="cacheManager" ref="ehcache"/>
+    </bean>
+    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+    	<property name="configLocation" value="classpath:config/ehcache.xml"/>
+    	<property name="shared" value="true"/>
+    </bean>
+
+
+All usages of Ehcache start with the creation of a CacheManager, which is an entity that controls and manages the Caches and can be used to retrieve this for storage. The entire ehcache-specific configuration is read from the resource ehcache.xml (configLocation property) – you’ll see in a dedicated section bellow how this file looks like. When set to true, the shared property specifies that the EhCache CacheManager should be shared as a singleton at the VM level.
+
+2.3. Declarative annotation-based cache
+
+Spring provides two Java annotations for the caching declaration: @Cacheable and @CacheEvict, which allow methods to trigger cache population or cache eviction. Before I show you some use examples of the two annotation, you have to make sure that caching annotations are enabled:
+
+2.4. Enabling Caching annotations
+
+It is important to note that even though declaring the cache annotations does not automatically triggers their actions – like many things in Spring, the feature has to be declaratively enabled (which means if you ever suspect caching is to blame, you can disable it by removing only one configuration line rather then all the annotations in your code).
+
+For XML configuration use the cache:annotation-driven element in the application context:
+
+
+
+    <cache:annotation-driven key-generator="enhancedDefaultKeyGenerator"/>
+    <bean id ="enhancedDefaultKeyGenerator" class="org.podcastpedia.cache.interceptor.EnhancedDefaultKeyGenerator"/>
+
+
+Normally you would just have  <cache:annotation-driven> inserted into your application context, but if the org.springframework.cache.interceptor.DefaultKeyGenerator will not suffice you have to implement a custom one. This was my case and here is how my Default<strong>Enhanced</strong>KeyGenerator looks like:
+
+
+
+    package org.podcastpedia.cache.interceptor;
+
+    import java.lang.reflect.Method;
+    import java.util.HashSet;
+
+    import org.springframework.cache.interceptor.KeyGenerator;
+
+    /**
+     * Default key generator. Returns {@value #NO_PARAM_KEY} if no
+     * parameters are provided, the parameter itself (if primitive type) if only one is given or
+     * a hash code computed from all given parameters' hash code values.
+     * Uses the constant value {@value #NULL_PARAM_KEY} for any
+     * {@code null} parameters given.
+     *
+     * @author Costin Leau
+     * @author Chris Beams
+     * @since 3.1
+     */
+    public class EnhancedDefaultKeyGenerator implements KeyGenerator {
+
+    	public static final int NO_PARAM_KEY = 0;
+    	public static final int NULL_PARAM_KEY = 53;
+
+    	private static final HashSet<Class<?>> WRAPPER_TYPES = getWrapperTypes();
+
+    	public Object generate(Object target, Method method, Object... params) {
+    		if (params.length == 1 && isWrapperType(params[0].getClass())) {
+    				return (params[0] == null ? NULL_PARAM_KEY : params[0]);
+    		}
+    		if (params.length == 0) {
+    			return NO_PARAM_KEY;
+    		}
+    		int hashCode = 17;
+    		for (Object object : params) {
+    			hashCode = 31 * hashCode + (object == null ? NULL_PARAM_KEY : object.hashCode());
+    		}
+    		return Integer.valueOf(hashCode);
+    	}
+
+        public static boolean isWrapperType(Class<?> clazz)
+        {
+            return WRAPPER_TYPES.contains(clazz);
+        }
+
+        private static HashSet<Class<?>> getWrapperTypes()
+        {
+            HashSet<Class<?>> ret = new HashSet<Class<?>>();
+            ret.add(Boolean.class);
+            ret.add(Character.class);
+            ret.add(Byte.class);
+            ret.add(Short.class);
+            ret.add(Integer.class);
+            ret.add(Long.class);
+            ret.add(Float.class);
+            ret.add(Double.class);
+            ret.add(Void.class);
+            return ret;
+        }
+    }
+
+
+The only difference to the original implementation is at the line 27, where the isWrapperType(params[0].getClass()) condition is added. This way, when the cached method has only one parameter, the returned result will be the parameter itself ONLY IF it is a primitive type, for other objects the hashcode will be computed and returned. In the next section, where the @Cacheable annotation is presented, I will mention where such a custom implementation was required.
+
+2.4.1. @Cacheable
+
+@Cacheable is used in front of methods that are cacheable – that is, methods for whom the result is stored into the cache so on subsequent invocations (with the same arguments), the value in the cache is returned without having to actually execute the method.
+
+Now I am going to present some use examples of the @Cacheable annotation.
+
+2.4.1.1. Default Key Generation
+
+Since caches are essentially key-value stores, each invocation of a cached method needs to be translated into a suitable key for cache access. If you specify only the value of the cache in the @Cacheable annotation in front of the method, then the default key generation or the one you specified as default will kick in.
+
+As specified above, I used a custom KeyGenerator, which functions after the following algorithm:
+
+If no params are given, return 0.
+If only one param is given and is primitive, return that instance.
+Else return a key computed from the hashes of all parameters.
+2.4.1.1.1. Example one – non-primitive input parameter
+
+
+
+    @Cacheable(value="searchResults")
+    public SearchResult getResultsForSearchCriteria(SearchData searchData) throws UnsupportedEncodingException {
+    .........
+    }
+
+
+In the example above the method getResultsForSearchCriteria will be cached in the cache "searchResults" (see ehcache.xml to find out how the cache is configured), and the key of the cached will be computed from the hash of the SearchData input parameter. I had to override the equals and hashCode methods for this class:
+
+
+
+    public class SearchData implements Serializable {
+
+    	private static final long serialVersionUID = 4682314801277970962L;
+
+    	/** query text */
+    	private String queryText;
+
+    	/** query text in natural mode */
+    	private String queryTextInNaturalMode;
+
+    	/** any of these words */
+    	private String anyOfTheseWords;
+
+    	/** all of these words **/
+    	private String allTheseWords;
+
+    	/** exact pharse **/
+    	private String exactPhrase;
+
+    	/** none of these words */
+    	private String noneOfTheseWords;
+
+    	/** Language code the podcasts should be in */
+    	private LanguageCode languageCode;
+
+    	/** search mode type - at the moment either natural or boolean */
+    	private String searchMode;
+
+    	/** number of results per page */
+    	private Integer numberResultsPerPage;
+    	private Integer currentPage;
+    	private Integer firstItemOnPage; //=(currentPage - 1)*numberResultsPerPage
+    	private boolean isOrderByPopularity;
+
+    	/** where to look for the given search criteria - at the moment podcast and episodes is availabel */
+    	private String searchTarget;
+
+    	/** List of selected categories id to be looked for */
+    	private List<Integer> categId;
+
+    	/** look for videos or audio files, or both (identified by "all") */
+    	private MediaType mediaType;
+
+    	/** contains the target where to search in - podcasts or episodes **/
+    	private String termsSearchTarget;
+
+    	/** order by criteria **/
+    	private OrderByOption orderBy;
+
+    	/**flag to mark that the model attribute is for feed generation */
+    	private boolean isForFeed;
+
+    	/** id of the tag that is being looked for */
+    	private Integer tagId;
+
+    	/** placeholder for the query string to be passed to the next request */
+    	private StringBuffer queryString;
+
+    	...............
+
+    	@Override
+    	public int hashCode() {
+    		final int prime = 31;
+    		int result = 1;
+    		result = prime * result
+    				+ ((allTheseWords == null) ? 0 : allTheseWords.hashCode());
+    		result = prime * result
+    				+ ((anyOfTheseWords == null) ? 0 : anyOfTheseWords.hashCode());
+    		result = prime * result + ((categId == null) ? 0 : categId.hashCode());
+    		result = prime * result
+    				+ ((currentPage == null) ? 0 : currentPage.hashCode());
+    		result = prime * result
+    				+ ((exactPhrase == null) ? 0 : exactPhrase.hashCode());
+    		result = prime * result
+    				+ ((firstItemOnPage == null) ? 0 : firstItemOnPage.hashCode());
+    		result = prime * result + (isForFeed ? 1231 : 1237);
+    		result = prime * result + (isOrderByPopularity ? 1231 : 1237);
+    		result = prime * result
+    				+ ((languageCode == null) ? 0 : languageCode.hashCode());
+    		result = prime * result
+    				+ ((mediaType == null) ? 0 : mediaType.hashCode());
+    		result = prime
+    				* result
+    				+ ((noneOfTheseWords == null) ? 0 : noneOfTheseWords.hashCode());
+    		result = prime
+    				* result
+    				+ ((numberResultsPerPage == null) ? 0 : numberResultsPerPage
+    						.hashCode());
+    		result = prime * result + ((orderBy == null) ? 0 : orderBy.hashCode());
+    		result = prime * result
+    				+ ((queryText == null) ? 0 : queryText.hashCode());
+    		result = prime
+    				* result
+    				+ ((queryTextInNaturalMode == null) ? 0
+    						: queryTextInNaturalMode.hashCode());
+    		result = prime * result + (int) (searchId ^ (searchId >>> 32));
+    		result = prime * result
+    				+ ((searchMode == null) ? 0 : searchMode.hashCode());
+    		result = prime * result
+    				+ ((searchTarget == null) ? 0 : searchTarget.hashCode());
+    		result = prime * result + ((tagId == null) ? 0 : tagId.hashCode());
+    		result = prime
+    				* result
+    				+ ((termsSearchTarget == null) ? 0 : termsSearchTarget
+    						.hashCode());
+    		return result;
+    	}
+
+    	@Override
+    	public boolean equals(Object obj) {
+    		if (this == obj)
+    			return true;
+    		if (obj == null)
+    			return false;
+    		if (getClass() != obj.getClass())
+    			return false;
+    		SearchData other = (SearchData) obj;
+    		return this.hashCode() == other.hashCode();
+    	}
+    	...............
+    }
+
+
+2.4.1.1.2. Example two – primitive input parameter
+
+
+
+    @Cacheable(value="podcasts")
+    public Podcast getPodcastById(int podcastId) throws BusinessException{
+    .........
+    }
+
+
+In this example the result (a podcast) will be placed in the "podcasts"-cache, and because the input is a primitive type, the cache key will be exactly the podcastId.
+
+Note: Make sure you don’t have overllaping keys in your cache. Image I had a method Integer getNumberOfEpisodes(int podcastId) cached and set the cache value to the same "podcasts". If I would invoke the method, with the let’s say podcastId=1, instead of returning the number of episodes as I would have expected it could return a podcast, and get runtime exception after that.
+
+2.4.1.2. Custom Key Generation Declaration {.title}
+
+What if the target methods to be cached have various signatures that cannot be simply mapped on top of the cache structure, or what if it doesn’t make sense to use all parameters to generate the hash key, or what if I want to cache a method with no parameters and not having 0 as the cache key?
+
+For such cases, the @Cacheable annotation allows the user to specify how the key is generated through its key attribute. The developer can also use SpEL to pick the arguments of interest (or their nested properties), perform operations or even invoke arbitrary methods without having to write any code or implement any interface.
+
+2.4.1.2.1. Example one – use method name as key
+
+
+
+    @Cacheable(value="randomAndTopRatedPodcasts", key="#root.method.name")
+    public List<Podcast> getRandomPodcasts(Integer numberOfPodcasts) {
+    	List<Podcast> randomPodcasts = podcastDao.getRandomPodcasts(numberOfPodcasts);
+    	for(Podcast p : randomPodcasts){
+    		p.setLastEpisode(episodeDao.getLastEpisodeForPodcast(p.getPodcastId()));
+    	}
+    	return randomPodcasts;
+    }
+
+
+In this example the result is persisted in the "randomAndTopRatedPodcasts"-cache. The key of the cache is specified via key="#root.method.name" and set to the name of the method being invoked, instead of being assigned the input numberOfPodcasts.
+
+Note: make sure not to have two methods with the same name in the same cache and use the methods’ name as cache-key.
+
+2.4.1.2.2. Example two – use method name as key and no input parameters
+
+
+
+    @Cacheable(value="referenceData", key="#root.method.name")
+    public List<Category> getCategoriesOrderedByNoOfPodcasts() {
+    	return categoryDao.getCategoriesOrderedByNoOfPodcasts();
+    }
+
+
+The method has no arguments. Result is cached in the "referenceData" pinned cache – we’ll see what means when I present the ehcache configuration file. The key of the cache is set to the name of the method being invoked.
+
+2.4.1.2.3. Example three – key generated with SpEL
+
+
+
+    @Cacheable(value="podcasts", key="T(java.lang.String).valueOf(#podcastId).concat('-').concat(#episodeId)")
+    public EpisodeWrapper getEpisodeDetails(Integer podcastId, Integer episodeId)  throws BusinessException {
+    	..........
+    }
+
+
+If I had let the default cache key generator calculate the cache key based on podcastId and episodeId it would have definetely come to collisions and present the wrong result to the user, so to cache episodes in "podcasts" I built a key made out of strings "podcastId-episodeId" (e.g. “1-10”, “1109-3”, “5-31”), which asures their uniqueness in the cache.
+
+
+
+    @Cacheable(value="referenceData", key="#root.method.name")
+    public List<Category> getCategoriesOrderedByNoOfPodcasts() {
+    	return categoryDao.getCategoriesOrderedByNoOfPodcasts();
+    }
+
+
+Note: I use the @Cacheable annotation at the service layer rather than at the DAO layer, because there are many cases (e.g. getPodcastDetails()) when a service method invokes several DAO methods, and if in cache I avoid these calls completely.
+
+2.4.2. @CacheEvict
+
+The cache abstraction allows not just population of a cache store but also eviction. This process is useful for removing stale or unused data from the cache. Opposed to @Cacheable, annotation @CacheEvict demarcates methods that perform cache eviction, that is methods that act as triggers for removing data from the cache. Just like its sibling, @CacheEvict requires one to specify one (or multiple) caches that are affected by the action, allows a key or a condition to be specified but in addition, features an extra parameter allEntries which indicates whether a cache-wide eviction needs to be performed rather then just an entry one (based on the key).
+
+I am going to give again some examples of using this annotation and explain why I configured it like that.
+
+2.4.2.1. Example one – cache eviction based on key
+
+
+
+    @Transactional
+    @CacheEvict(value="podcasts", key="#rating.podcastId")
+    public ItemRatingResponse addRatingForPodcast(Rating rating, Integer currentNumberOfRatings, Float currentRating) {
+    	return addRatingForItem(rating, currentNumberOfRatings, currentRating);
+    }
+
+
+In this first example when a visitor rates a podcast, it gets evicted from the "podcasts" cache. The cache key is the podcast’s id which is a property of the Rating class. When requested again the podcast will be presented to the visitor with the new rating and loaded in the cache.
+
+2.4.2.2. Example two – multiple cache eviction/flush
+
+
+
+    @Caching(evict = {
+    		@CacheEvict(value="referenceData", allEntries=true),
+    		@CacheEvict(value="podcasts", allEntries=true),
+    		@CacheEvict(value="searchResults", allEntries=true),
+    		@CacheEvict(value="newestAndRecommendedPodcasts", allEntries=true),
+    		@CacheEvict(value="randomAndTopRatedPodcasts", allEntries=true)
+    	})
+    public void flushAllCaches() {
+    	LOG.warn("All caches have been completely flushed");
+    }
+
+
+As the name implies, when this method is invoked all the defined caches are flushed. To allow the use of multiple nested @CacheEvict on the same method, I had to use an enclosing annotion – @Caching.
+
+2.5. Ehcache.xml
+
+As mentioned in the section Configure the cache storage, the caches configuration is done declaratively in the ehcache.xml file:
+
+
+
+    <ehcache
+    	xsi:noNamespaceSchemaLocation="ehcache.xsd"
+    	updateCheck="true"
+    	monitoring="autodetect"
+    	dynamicConfig="true"
+    	maxBytesLocalHeap="150M"
+    	>
+    	<diskStore path="java.io.tmpdir"/>
+
+    	<cache name="searchResults"
+    	      maxBytesLocalHeap="100M"
+    	      eternal="false"
+    	      timeToIdleSeconds="300"
+    	      overflowToDisk="true"
+    	      maxElementsOnDisk="1000"
+    	      memoryStoreEvictionPolicy="LRU"/>
+
+    	<cache name="podcasts"
+    	      maxBytesLocalHeap="40M"
+    	      eternal="false"
+    	      timeToIdleSeconds="300"
+    	      overflowToDisk="true"
+    	      maxEntriesLocalDisk="1000"
+    	      diskPersistent="false"
+    	      diskExpiryThreadIntervalSeconds="120"
+    	      memoryStoreEvictionPolicy="LRU"/>
+
+    	<cache name="referenceData"
+    	      maxBytesLocalHeap="5M"
+    	      eternal="true"
+    	      memoryStoreEvictionPolicy="LRU">
+    	      <pinning store="localMemory"/>
+    	 </cache>
+
+    	<cache name="newestAndRecommendedPodcasts"
+                  maxBytesLocalHeap="3M"
+    	      eternal="true"
+    	      memoryStoreEvictionPolicy="LRU">
+    	      <pinning store="localMemory"/>
+    	</cache>
+
+    	<cache name="randomAndTopRatedPodcasts"
+                  maxBytesLocalHeap="1M"
+    	      timeToLiveSeconds="300"
+    	      memoryStoreEvictionPolicy="LRU">
+    	 </cache>
+
+    </ehcache>
+
+
+Most of the properties set in the caches are self explaining by name, but here are some extra details:
+
+maxBytesLocalHeap – defines how many bytes the cache may use from the VM’s heap. If a CacheManager    maxBytesLocalHeap has been defined, this Cache’s specified amount will be   subtracted from the CacheManager. Other caches will share the remainder. This attribute’s values are given as k|K|m|M|g|G for  kilobytes (k|K), megabytes (m|M), or gigabytes (g|G). For example, maxBytesLocalHeap=”2g” allots 2 gigabytes of heap memory. If you specify a maxBytesLocalHeap, you can’t use the maxEntriesLocalHeap attribute. maxEntriesLocalHeap can’t be used if a CacheManager maxBytesLocalHeap is set.
+Note: Set at the highest level this property defines the memory allocated for all the defined caches. You have to divide it afterwards to the individual caches.
+eternal – sets whether elements are eternal. If eternal,  timeouts are ignored and the  element is never expired.
+timeToIdleSeconds</code>` – sets the time to idle for an element before it expires. i.e. The maximum amount of time between accesses before an element expires. Is only used if the element is not eternal. Optional attribute. A value of 0 means that an Element can idle for infinity. The default value is 0.
+timeToLiveSeconds – sets the time to live for an element before it expires. i.e. The maximum time between creation time and when an element expires. Is only used if the element is not eternal. Optional attribute. A value of 0 means that and Element can live for infinity. The default value is 0.
+memoryStoreEvictionPolicy – policy would be enforced upon reaching the maxEntriesLocalHeap limit. Default policy is Least Recently Used (specified as LRU).
+Notes:
+If you want take some load of your database you could also you the localTempSwap persistance strategy, and in that case you can use maxEntriesLocalDisk or maxBytesLocalDisk at either the Cache or CacheManager level to control the size of the disk tier. As the database of Podcastpedia.org is not overloaded at the moment, that strategy wouldn’t make any sense.
+
+Two of the configured caches, "referenceData" and "newestAndRecommendedPodcasts" are pinned in the local memory (<pinning store="localMemory"/>), that means the data will remain in the cache at all times. To unpin the data from the cache you have to clear the cache.
+
+3. Summary
+
+Well, this concludes the application caching strategy for Podcastpedia. You’ve learned what libraries are required for caching with Ehcache, how to configure the cache storage, how Spring supports caching via annotations.
+
+But as I mentioned before, application/website optimization should be a holistic approach, with application caching being just a part of that – it might also want to
+
+optimize your MySQL server settings,
+enable compression and leverage browser caching with Apache Server
+
+or
+
+to tweak your Tomcat’s JDBC connection pool configuration

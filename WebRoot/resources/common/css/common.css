@@ -1,0 +1,39 @@
+@CHARSET "UTF-8";
+/** 圆角 */
+input,.btn {
+	-moz-border-radius: 3px!important; /* Firefox */
+	-webkit-border-radius: 3px!important; /* Safari 和 Chrome */
+	border-radius: 3px!important; /* Opera 10.5+, 以及使用了IE-CSS3的IE浏览器 */
+}
+.tl{
+	text-align: left!important;
+}
+.tr{
+	text-align: right!important;
+}
+.tc{
+	text-align: center!important;
+}
+.hide{
+	display: none;
+}
+.tr_hover{
+	background: #28b779!important;
+	color: #ffffff;
+}
+.table td{
+	font-size:14px;
+}
+.layui-layer-title{
+	background-color: #006DCC!important;
+	color: #fff;
+}
+.widget-box{
+	border-top: none;
+}
+.layui-layer-setwin .layui-layer-close1{
+	background-position: -82px -40px;
+}
+.select2-dropdown, .select2-dropdown--below{
+	z-index: 9999999;
+}

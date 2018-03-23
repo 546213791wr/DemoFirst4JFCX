@@ -1,0 +1,170 @@
+public List<Group> getGroupList(Integer fid) {
+/*
+        // 如果gid为空，则是获取FID对应的机构名称，可通过机构查询下级分组
+		// http://mooc1.chaoxing.com/gas/usergroup?fid=30575&gid=1668241&offset=0&limit=10&fields=id,gid,groupname,sort
+
+		{
+		  "data": [
+			{
+			  "gid": 1668241,
+			  "id": 1684808,
+			  "sort": 1684808,
+			  "groupname": "数学教研组"
+			},
+			{
+			  "gid": 1668241,
+			  "id": 1684809,
+			  "sort": 1684809,
+			  "groupname": "英语教研组"
+			},
+			{
+			  "gid": 1668241,
+			  "id": 1684820,
+			  "sort": 1684820,
+			  "groupname": "其它院系"
+			}
+		  ],
+		  "count": 3
+		}
+*/
+	Organization organization = this.getOrganization(fid);
+	String requestUrl = "http://mooc1-api.chaoxing.com/gas/usergroup?fid={fid}&gid={gid}&offset=0&limit=10000&fields=id,gid,groupname,sort".replace("{fid}", String.valueOf(fid)).replace("{gid}", organization.getId().toString());
+	logger.info("getGroupList requestUrl: " + requestUrl);
+	JSONArray jsonArray = JSON.parseObject(HttpClientJdk.httpRequestGet(requestUrl)).getJSONArray("data");
+	List<Group> groupList = new ArrayList<Group>();
+	for (int i = 0; i < jsonArray.size(); i++) {
+		JSONObject jsonObject = jsonArray.getJSONObject(i);
+		Group group = new Group();
+		group.setId(jsonObject.getInteger("id"));
+		group.setName(jsonObject.getString("groupname"));
+		groupList.add(group);
+	}
+	return groupList;
+}
+
+
+private List<User> getGroupUserList(Integer fid, Integer id) {
+/*
+// 20170516092606
+// http://bigdata-ans.chaoxing.com/api/person?fid=30575&group1=1684808
+
+{
+  "total": 14,
+  "json": [
+    {
+      "fid": 30575,
+      "createtime": 1493969805000,
+      "role": "1",
+      "group3": 0,
+      "userid": 48713803,
+      "group2": 0,
+      "realname": "数学老师2",
+      "group1": 1684808,
+      "dxfid": 29062,
+      "phone": "",
+      "personid": 33996735,
+      "event": {
+
+      },
+      "fids": [
+        30575
+      ],
+      "email": "shuxue2@qq.com",
+      "username": "shuxue2@qq.com"
+    },
+    ...
+  ],
+  "status": true
+}
+*/
+	String requestUrl = "http://bigdata-ans.chaoxing.com/api/person?fid={fid}&group1={gid}".replace("{fid}", String.valueOf(fid)).replace("{gid}", id.toString());
+	logger.info("getGroupUserList requestUrl: " + requestUrl);
+
+	JSONArray jsonArray = JSON.parseObject(HttpClientJdk.httpRequestGet(requestUrl)).getJSONArray("json");
+	List<User> userList = new ArrayList<User>();
+	for (int i = 0; i < jsonArray.size(); i++) {
+		JSONObject jsonObject = jsonArray.getJSONObject(i);
+		User user = new User();
+		user.setId(jsonObject.getInteger("userid"));
+		user.setUsername(jsonObject.getString("username"));
+		user.setRealName(jsonObject.getString("realname"));
+		user.setRole(jsonObject.getString("role"));
+		user.setGroup(this.getGroup(fid, id));
+		user.setOrganization(this.getOrganization(fid));
+		userList.add(user);
+	}
+	return userList;
+}
+
+
+
+/*注册*/
+public String registerUser(Integer fid, String name, String realName, String password, String role, String groupName) {
+
+	/*
+	单个注册
+	https://passport2-api.chaoxing.com/api/register?schoolId={number}&uname={string}&email={email}&phone={phone}&pwd={string}&realName={string}&role={string}&enc={string}&ip={string}
+	schoolId: Required fid 同passport fid
+	uname:登录名,邮箱格式按照邮箱注册流程，帐号按照帐号注册流程,(uname不再支持手机号类型)
+	email:邮箱
+	phone:手机号
+	pwd: required 密码(最大20个字符)
+	realName: optional 真实姓名(长度0-50个字符，可以为空) utf-8编码
+	role optional 用户角色(mooc规则:"3"代表学生) utf-8编码  注册老师的时候：role= TEACHER
+	sex optional 性别 （规则：男 1 女 0 保密-1)
+	enc: required 握手串 md5(uname+email+phone+time+key) time格式：yyyy-MM-dd
+	注意：uname,email,phone三个字段不可同时为null
+	key=uWwjeEKsri
+
+	Response：
+	成功：{status:'success',mes:'注册成功',"schoolid":xxx,"uid":xxx}
+	邮箱存在：{status:'exist',mes:'邮箱已占用',"schoolid":xxx,"uid":xxx}
+	手机存在：{status:'exist',mes:'手机已占用',"schoolid":xxx,"uid":xxx}
+	用户名已存在：{status:'exist',mes:'用户名已经存在',"schoolid":xxx,"uid":xxx}
+	用户存在：{status:'exist',mes:'帐号已经存在',"schoolid":xxx,"uid":xxx}
+	失败：{status:'failed',mes:'失败信息提示'}
+	registerUser(30575, "iiiiii12", "中国abc123", "123456", "TEACHER")
+	registerUser(30575, "iiiiii12", "中国abc123", "123456", "9")
+	1教师 3学生 7学校管理员 9教研组组长
+	默认学生, 7不能注册
+	*/
+
+	// 注册老师的时候role=TEACHER
+	String sign = DigestUtils.md5Hex(name + "uWwjeEKsri" + fid).toUpperCase();
+	String requestUrl = "http://mooc1-api.chaoxing.com/user/register?schoolid={fid}&uname={name}&realname={realName}&pwd={password}&group1={group}&role={role}&enc={sign}";
+	requestUrl = requestUrl.replace("{fid}", String.valueOf(fid)).replace("{name}", name).replace("{password}", password);
+	requestUrl = requestUrl.replace("{role}", role).replace("{group}", String.valueOf(groupName)).replace("{realName}", realName);
+	requestUrl = requestUrl.replace("{sign}", sign);
+	String result=HttpClientJdk.httpRequestGet(requestUrl);
+	return result;
+}
+
+
+// 根据用户UID查询用户基本情况。
+public FanyaUser getUser(Integer uid) {
+		/*
+		 * // 20170516113340 //
+		 * http://mooc1-1.chaoxing.com/gas/person?userid=49138104&fields=group1,
+		 * schoolid,roleids,loginname,username
+		 *
+		 * { "data": [ { "roleids": "9", "loginname": "iiiiii12", "schoolid":
+		 * "30575", "group1": "1684808", "username": "中国abc123" } ] }
+		 */
+		String requestUrl = "http://mooc1-api.chaoxing.com/gas/person?userid={uid}&fields=group1,schoolid,roleids,loginname,username"
+				.replace("{uid}", uid.toString());
+		String responseContent = HttpClientJdk.httpRequestGet(requestUrl);
+		JSONObject jsonObject = JSON.parseObject(responseContent).getJSONArray("data").getJSONObject(0);
+		FanyaUser user = new FanyaUser();
+		user.setId(uid);
+		user.setUsername(jsonObject.getString("loginname"));
+		user.setRealName(jsonObject.getString("username"));
+		user.setRole(jsonObject.getString("roleids"));
+
+		Integer gid = jsonObject.getInteger("group1");
+		Integer fid = jsonObject.getInteger("schoolid");
+		user.setGroup(getGroup(fid, gid));
+		user.setOrganization(getOrganization(fid));
+		return user;
+	}
+
+

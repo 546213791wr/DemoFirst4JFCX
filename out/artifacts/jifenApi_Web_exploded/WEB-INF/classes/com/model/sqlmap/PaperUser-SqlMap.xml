@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+
+    <resultMap id="RM.PaperUser" class="com.model.PaperUser">
+        <result property="id" column="id"/>
+        <result property="uid" column="uid"/>
+        <result property="paperId" column="paper_id"/>
+        <result property="answerDate" column="answer_date"/>
+        <result property="rightLv" column="right_lv"/>
+        <result property="status" column="status"/>
+        <result property="rightsQts" column="rights_qts"/>
+        <result property="errorQts" column="error_qts"/>
+        <result property="resId" column="res_id"/>
+        <result property="userMissionId" column="user_mission_id"/>
+        <result property="userEvaluateId" column="user_evaluate_id"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="PaperUser.columns">
+	    <![CDATA[
+        id, uid, paper_id, answer_date, right_lv, status, rights_qts, error_qts ,res_id,user_mission_id,user_evaluate_id
+	    ]]>
+	</sql>
+	
+    <insert id="PaperUser.insert" >
+    <![CDATA[
+        INSERT INTO re_paper_user (
+        	id, 
+        	uid, 
+        	paper_id, 
+        	answer_date, 
+        	right_lv, 
+        	status, 
+        	rights_qts, 
+        	res_id,
+        	error_qts,
+        	user_mission_id,
+        	user_evaluate_id
+        ) VALUES (
+        	#id#, 
+        	#uid#, 
+        	#paperId#, 
+        	#answerDate#, 
+        	#rightLv#, 
+        	#status#, 
+        	#rightsQts#, 
+        	#resId#,
+        	#errorQts#,
+        	#userMissionId#,
+        	#userEvaluateId#
+        )
+    ]]>
+    <!--
+    mysql:		type="post" SELECT  select last_insert_id()
+    sqlserver:	type="post" SELECT  @@identity  AS  ID
+    oracle:		type="pre" 	SELECT  sequenceName.nextval AS ID FROM DUAL
+    DB2:		type="pre"	values nextval for sequenceName
+    -->
+        <selectKey resultClass="java.lang.Integer" type="post" keyProperty="id" >
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="PaperUser.update" >
+    <![CDATA[
+        UPDATE re_paper_user SET
+	        uid = #uid#,
+	        paper_id = #paperId#,
+	        user_evaluate_id = #userEvaluateId#,
+	        answer_date = #answerDate#,
+	        right_lv = #rightLv#,
+	        status = #status#,
+	        rights_qts = #rightsQts#,
+	        res_id = #resId#,
+	        user_mission_id = #userMissionId#,
+	        error_qts = #errorQts#
+        WHERE 
+	        id = #id# 
+    ]]>
+    </update>
+
+    <delete id="PaperUser.delete">
+    <![CDATA[
+        DELETE FROM re_paper_user WHERE
+        id = #id# 
+    ]]>
+    </delete>
+    
+    <select id="PaperUser.getById" resultMap="RM.PaperUser">
+	    SELECT <include refid="PaperUser.columns"/>
+	    <![CDATA[
+	        FROM re_paper_user 
+	        WHERE 
+		        id = #id# 
+	    ]]>
+    </select>
+
+</sqlMap>
+

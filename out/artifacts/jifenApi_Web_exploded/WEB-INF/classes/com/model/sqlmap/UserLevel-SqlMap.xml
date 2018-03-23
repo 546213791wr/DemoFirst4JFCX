@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+
+    <resultMap id="RM.UserLevel" class="com.model.UserLevel">
+        <result property="id"                 column="id"/>
+        <result property="level"              column="level"/>
+        <result property="levelName"          column="level_name"/>
+        <result property="startScore"         column="start_score"/>
+        <result property="endScore"           column="end_score"/>
+        <result property="status"             column="status"/>
+        <result property="prizeStar"          column="prize_star"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="UserLevel.columns">
+	    <![CDATA[
+        id, level, level_name, start_score, end_score, status, prize_star
+	    ]]>
+	</sql>
+	
+    <insert id="UserLevel.insert" >
+    <![CDATA[
+        INSERT INTO plt_user_level (
+            id,
+            level,
+            level_name,
+            start_score,
+            end_score,
+            status,
+            prize_star
+        ) VALUES (
+            #id#,
+            #level#,
+            #levelName#,
+            #startScore#,
+            #endScore#,
+            #status#,
+            #prizeStar#
+        )
+    ]]>
+    <!--
+    mysql:		type="post" SELECT  select last_insert_id()
+    sqlserver:	type="post" SELECT  @@identity  AS  ID
+    oracle:		type="pre" 	SELECT  sequenceName.nextval AS ID FROM DUAL
+    DB2:		type="pre"	values nextval for sequenceName
+    -->
+        <selectKey resultClass="java.lang.Integer" type="post" keyProperty="id" >
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="UserLevel.update" >
+    <![CDATA[
+        UPDATE plt_user_level SET
+            level = #level#,
+            level_name = #levelName#,
+            start_score = #startScore#,
+            end_score = #endScore#,
+            status = #status#,
+            prize_star = #prizeStar#
+        WHERE
+	        id = #id# 
+    ]]>
+    </update>
+
+    <delete id="UserLevel.delete">
+    <![CDATA[
+        DELETE FROM plt_user_level WHERE id = #id#
+    ]]>
+    </delete>
+    
+    <select id="UserLevel.getById" resultMap="RM.UserLevel">
+	    SELECT <include refid="UserLevel.columns"/>
+	    <![CDATA[
+	        FROM plt_user_level
+	        WHERE
+		        id = #id# 
+	    ]]>
+    </select>
+
+    <select id="UserLevel.getLevelByUserJiFen" resultMap="RM.UserLevel">
+        SELECT <include refid="UserLevel.columns"/>
+        <![CDATA[
+	        FROM plt_user_level
+	        WHERE
+		        start_score <= #startScore#
+		    ORDER BY start_score DESC
+		    LIMIT 1
+	    ]]>
+    </select>
+
+</sqlMap>
+

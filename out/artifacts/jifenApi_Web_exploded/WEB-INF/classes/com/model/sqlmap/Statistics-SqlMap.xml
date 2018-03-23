@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+    <select id="Statistics.getSchoolNum" resultClass="java.lang.Integer">
+        SELECT
+        count( id )
+        FROM
+        plt_org_city
+        WHERE
+        city_code = #cityCode#
+        AND STATUS = 2
+    </select>
+    <select id="Statistics.getStudentNum" resultClass="java.lang.Integer">
+        SELECT
+            count( xfud.id )
+        FROM
+            xy_fanya_user_detail xfud
+            JOIN plt_org_city poc ON poc.city_code = #cityCode#
+            AND xfud.fid = poc.fid
+        WHERE
+            user_type_id = 1
+    </select>
+    <select id="Statistics.getAreaNum" resultClass="java.lang.Integer">
+        SELECT
+            count( DISTINCT poc1.city_code )
+        FROM
+            plt_org_city poc1
+            JOIN plt_org_city poc2 ON poc2.city_code = #cityCode#
+            AND poc1.fid = poc2.fid
+        WHERE
+            poc1.STATUS = 2
+    </select>
+  <select id="Statistics.getTeacherNum" resultClass="java.lang.Integer">
+        SELECT
+            count( xfud.id )
+        FROM
+            xy_fanya_user_detail xfud
+            JOIN plt_org_city poc ON poc.city_code = #cityCode#
+            AND xfud.fid = poc.fid
+        WHERE
+            user_type_id = 2
+    </select>
+  <select id="Statistics.getQuestionNum" resultClass="java.lang.Integer">
+        SELECT
+            count( rq.id )
+        FROM
+            re_question rq
+            JOIN plt_org_city poc ON poc.city_code = #cityCode#
+            AND rq.fid = poc.fid
+        WHERE
+            rq.STATUS =3
+    </select>
+ <select id="Statistics.getPubQuestionNum" resultClass="java.lang.Integer">
+        SELECT
+            count(rq.id)
+        FROM
+            re_question rq
+        WHERE
+            rq.create_user_id='1'
+    </select>
+
+
+</sqlMap>
+
